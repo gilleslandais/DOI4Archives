@@ -12,6 +12,12 @@ it's better to put no relations than a misunderstood relationship.
 
 See relation vocabulary and their definitions in the [DataCite Schema](https://datacite-metadata-schema.readthedocs.io/_/downloads/en/4.5/pdf/), section 12
 
+
+```
+Priviledge DOI linking to any relations
+```
+DOI has to be priviledged than any other identifier or URI. DOI facilitate the harvesting/merging jobs. For instance the EOSC portal selects the relations type to display with and priviledge resources having DOI.
+
 ## Link resources within a DataCenter
 DataCenter may provides resources in different granularity. For instance Chandra provides catalogue of observations. Each observation is a Product that has his own DOI.
 Then the products are linked to the catalogue which has a DOI too.

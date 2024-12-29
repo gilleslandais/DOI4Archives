@@ -2,7 +2,7 @@
 Distinguish dataset versioning (the Data Center responsability) and metadata versioning (automated versioning done by DataCite at each metadata update)
 
 A good practice consists to follow a versioning mechanism for each data update. DataCite (version 4.5) recommends to create a new DOI for each major version and to stipulate the version number with the ```Version``` term. 
-It is recommended to adopt a version number folowing the pattern ```major_version.minor_version ```
+It is recommended to adopt a version number folowing the pattern ```major_version.minor_version[.patch_version]```
 
 
 Different mechanisms exist:
@@ -15,6 +15,9 @@ Versioning is well adapted for data subject to planified update, such as survey 
 However, there are datasets that evolves regularly and for which versioning is inapropriate. For instance logs of observations evolves regularly.
 
 
-For those type of datasets, we suggest to add in the DOI ```Description``` the evolving nature of the datasets and to modify the "Update" date at each modification.
+For those type of datasets, we suggest to add in the DOI ```title``` or in ```Description``` the evolving nature of the datasets and to modify the "Update" date at each modification.
 
-In a tight flow context, for instance databases such as Simbad or NED which evolves every days, it is worth considering using the ```resourceType``` as a ```Service``` (see the DataCite controled vocabulary).
+see also the "evolving datasets" example in  [Resource types](resourcetype.md)  
+
+
+***Note:*** we distinguish evolving Dataset, such as Logs of Observation, that are incrementaly updated and knowledgdgebase for which the content evolves in its globality (eg: Ned, Simbad).

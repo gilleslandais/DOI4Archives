@@ -20,3 +20,75 @@ See in section ?? to get more information
  
 eg: ```curl -LH "Accept: application/x-bibtex" https://doi.org/10.5270/esa-1ugzkg7```
 
+## Full Bibtex template
+ the following example map bibtex with DataCite schema.
+
+```
+@dataset{{localref},
+	author = {{authors},
+	title = {title},
+	year = {year},
+	month = {month},
+	eid = {usualName},
+	url = {url},
+	keywords = {keywords},
+	publisher = {publisherName},
+	copyright = {rights},
+	DOI = {DOI}
+}
+```
+
+Equivalent in APA style:
+```
+{authors} ({year}). {title} [Data set]. {publisher}. {DOI}
+```
+VizieR example: (catalogue J/MNRAS/320/451)
+```
+Beers, T. C., Rossi, S., O'Donoghue, D., Kilkenny, D., Stobie, R. S., Koen, C., & Wilhelm, R. (2006). A-G star metallicity [Data set]. Centre de Donnees Strasbourg (CDS). https://doi.org/10.26093/CDS/VIZIER.73200451
+```
+
+
+Linking bibtex with DataCite schema:
+
+|Bibtex    | DataCite            | Relevance                              |
+|----------|---------------------|----------------------------------------|
+|authors   | Authors             | MUST, see \ref{sec:authors}            |
+|title     | Title               | MUST, see \ref{sec:title}              |
+|year      | Date:creation       | RECOMMENDED, see \ref{sec:dates}]      |
+|month     | Date: creation      |                                        |
+|eid       | alternateIdentifier | MAY, see \ref{sec:linkeddata}          |
+|url       |                     | SHOULD, use \url{https://doi.org/{DOI}}|
+|keywords  | Sujects             | SHOULD, Please, see \ref{sec:keywords} |
+|publisher | Publisher           | MUST                                   |
+|copyright | Rights              | RECOMMENDED, see \ref{sec:licenses}    |
+|DOI       |                     | MUST                                   |
+
+## Evloving Datasets
+
+see [DataCite evolving datasets](https://datacite-metadata-schema.readthedocs.io/en/4.6/guidance/dynamic-datasets/)
+
+We distinguish different ways for Citing evolving datasets. The method depends on the data Center implementation.
+
+1. Cite a snapshot of the Dataset. In this approach, the Data Center make snapshot an adopts a versioning mechanism.
+2. Cite the dataset as to be an evolving Dataset.
+    Example in APA style:
+    ```
+    {authors} ({year}). {title} [evolving Data set]. {publisher}. {DOI}. Accessed {date_of_access}
+    ```
+    In the example {date_of_access} could be the 'upodate' date of the DOI record (supposing that the dataset and its DOI recors are well synchronised).
+
+3. Cite a sub part of a DataSet resulting of a query. 
+   The solution to these problems can become complex if we take into account the reproducibility.
+  A simple solution which does not take reproducibility into account consists to cite the access protocol (for example scs, TAP), optionaly completed with query details.
+
+    Example in APA style: (note that ```protocol``` is independent of the DOI record!
+    ```
+
+  A more advanced option, that take into account the reproducibility has been adopted by the VAMDC Query Store wher both: query and result are hosted with a DOI (giving details are not in the scope of this note).
+
+    {authors} ({year}). {title} [evolving Data set]. {publisher}. {DOI}. Accesses {date_of_access}, via {protocol}
+    ```
+
+
+***Note** see also the acknowledgment proposed in [DataOrgin](https://www.ivoa.net/documents/DataOrigin/) Appendix Citation, Template.
+

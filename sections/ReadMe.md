@@ -31,6 +31,7 @@ see [checklist.md](checklist.md)
 
 
 # Metadata list:
+- Coosing a resource type [resourcetype.md](resourcetype.md)
 - authors/contributors [authors.md](authors.md)
 - keywords [metakeywords.md](metakeywords.md)
 - dates [dates.md](dates.md)
