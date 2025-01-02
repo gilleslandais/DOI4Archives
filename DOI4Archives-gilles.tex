@@ -155,21 +155,21 @@ Dataset DOIs do not lead to data, or what they do lead to is widely varied.
 \subsection{Status of DOI in the Virtual Observatory}
 The DOI is not a standard of the Virtual Observatory which uses the IVOID identifier \citep{note:ivoid}.
 
-At the time of writing, the DOI is not well represented in VO standards. They are not part of the metadata of datamodels or protocols created long before the advent of DOIs.
+At the time of writing, the DOI is not well integrated into VO standards. They are not part of the metadata of data-models or protocols created long before the advent of DOIs.
 However, it starts to appear in Notes or in standards as an alternate identifier.
 
 %DOI is today rare in the VO landscape, it is not cited in the DataModel or  but with its success in Open Sciences, it starts to appear in standards and Notes.
 
 \begin {itemize}
-\item the Data Origin \citep{note:dataorigin} notes includes DOI among the metadata that a service can provide in the result of a query.
+\item Data Origin \citep{note:dataorigin} is a Note which includes DOI among the metadata that a service can provide in the result of a query.
 \item the registry \citep{std:registry} (VOResource 1.2) allows to specify DOI in any ResourceName such as alternate identifier or related resources.
-\item the BibVO \citep{note:bibvo} is a note that requires DOI to link Data and articles.
+\item BibVO \citep{note:bibvo} is a note that requires DOI to link Data and articles.
 \end{itemize}
 
-\todo{add alternate identifier in ivoa and why}
+%\todo{add alternate identifier in ivoa and why}
 
 \subsection{Comparison with the VO Registry schemas}
- Record in the VO registry has a unique identifier called IVOID. It is used in the Registry, includes a URL in its metadata, but is not really resolvable such as the DOI. However, its syntax which can be extended to a sub-part of the resource is commonly used in VO services. For instance, an IVOID on a tableset resource can be completed to specify a particular record and then to be used to generate a Datalink.
+ Record in the VO registry has a unique identifier called IVOID. It includes a URL in the metadata, but the IVOID is not really resolvable such as DOI. However, its syntax which can be extended to a sub-part of the resource is commonly used in VO services. For instance, an IVOID of a tableset can be completed to specify a particular record and then to be used to generate a Datalink.
  
  The VO Registry is  based on VODataService and VOResource. It includes Resources; Datasets and Services that can be linked with term \vorent{IsServedBy}. 
  
@@ -263,14 +263,20 @@ Collection DOIs may result from queries performed at a Service.
 \textbf{Warning: weeds.}
 
 \paragraph{}
-\textbf{\color{red} Gilles: are there ambiguities (like in French) between Service (query tool) and Service(Organization or Information System such as VizieR services) ?\\}
+\textbf{\color{red} Gilles: are there ambiguities between Service (query tool) and Service(Organization or Information System such as VizieR services) ?\\}
 
-{\color{red} 
+{\color{red} Gilles: (note sure)
     The "Service" definition of DataCite: "An organized system of apparatus, appliances, staff, etc., for supplying some function(s) required by end users."
 
-    We distinguish Query tools Service (ie: Web application that provides DataSet via a query form) and Service as Information System such as the VizieR Service (doi: \url{https://doi.org/10.26093/cds/vizier}).
+    We distinguish Query tools Service (ie: Web application leading query result such as a TAP server) and Organized System Service which includes the whole architecture, Staff query tools, datasets, etc. \\
+    
+    Examples:
+    \begin{itemize}
+    	\item the VizieR Service, doi:\\ \url{https://api.datacite.org/dois/application/vnd.datacite.datacite+xml/10.26093/cds/vizier}
+    	\item TOSS (Tübingen Oscillator Strengths Service, GAVO):\\ \url{https://api.datacite.org/dois/application/vnd.datacite.datacite+xml/10.21938/3I01ISNUCODNH1ZJBCVUWA}
+    \end{itemize} 
 
-    DataCite gives the GAVO example: \url{https://api.datacite.org/dois/application/vnd.datacite.datacite+xml/10.21938/3I01ISNUCODNH1ZJBCVUWA}
+    DataCite gives the 
 }
 
 \textbf{\color{red} added by Gilles}
@@ -327,8 +333,6 @@ Here is a topical list of pathologies:
 \textbf{\color{red}This section has been added by Gilles (from sections)}
 
 \subsection{Pre-requisite}
-
-Before beginning a DOI workflow, the Data Center has to contact a DOI registration agency.
 Ten Registration agencies are providing DOIs, Crossref and DataCite are the best known in astronomy. 
 Datacite offers the most appropriate metadata for recording data. We strongly recommend the use of DataCite.\\
 
@@ -483,10 +487,10 @@ We consider different citation for evolving datasets. The method depends on the 
 		In the example {date\_of\_access} could be the 'update' date of the DOI record (supposing that the dataset and its DOI recors are well synchronized).
 
 	\item Cite a sub part of a DataSet resulting of a query.\\ 
-	The solution can become complex if we take or not the reproducibility aspect.
-	A simple solution which does not take reproducibility into account consists to cite the access protocol (for example IVOA SCS, TAP), optionally completed with query details.
+	The solution may become complex if we take or not the reproducibility aspect.
+	A simple solution without reproducibility constraint consists to cite the access protocol (for example IVOA SCS, TAP), optionally completed with query details.
 
-	Example in APA style: (note that ```protocol``` is independent of the DOI record!
+	Example in APA style: (note that "protocol" is independent of the DOI record!
 \begin{verbatim}
 {authors} ({year}). {title} [evolving Data set]. {publisher}. 
 {DOI}. Accesses {date_of_access}, via {protocol}	
@@ -512,7 +516,7 @@ It is rather a common practice to acknowledge than cite a service in an article.
 \label{sec:landingpage}
 
 \subsubsection{Building a landing-page}
-Landing page is a human readable WEB page attached to the DOI (eg: ....) Datacite provides a documentation about good usage \footnote{\url{https://support.datacite.org/docs/landing-pages}}.
+Landing page is a human readable WEB page attached to the DOI. Datacite provides a documentation about good usage \footnote{\url{https://support.datacite.org/docs/landing-pages}}.
 
 %\begin{lstlisting}[basicstyle=\footnotesize,frame=single,backgroundcolor=\color{gray}]
 %\begin{admonition}{Note}
@@ -620,7 +624,7 @@ There are many reasons to link a resource with external products, we give just f
 
 \paragraph{Linking Dataset to a publication}
 DataCites provides terms to link Datasets with articles. For instance \dataciteterm{Cites}, \dataciteterm{isSupplementTo}, \dataciteterm{isDescriebdedBy}, \dataciteterm{References}, etc.
-Choosing the good term is specfific to the Datasets. \\
+Choosing the good term is specific to the Datasets. \\
 
 
 Note the \dataciteterm{Cites} relations which makes an automated citation (the article is cited when the DOI of the dataset is created). 
@@ -696,7 +700,7 @@ Link an other network (see \ref{sec:bestpractice:providing}) is not a capability
 However, networks using a specific identifier can be exploited to link the DOI record.\\
 \dataciteterm{alternateIdentifier} is a term to specify an other identifier of the same resource. For instance the Usual Name used by the Data Center or the IVOID of the Virtual Observatory.
 
-\important{When possible, we suggest to add the IVOID of the resource in DOI using \dataciteterm{alternateIdentifier} and to add the DOI in the VO Registry records using \vorent{altIdentifier}.}
+\important{When it exists, we suggest to add the IVOID of the resource in DOI using \dataciteterm{alternateIdentifier} and to add the DOI in the VO Registry records using \vorent{altIdentifier}.}
 
 \subsubsection{Linked Data for Services and knowledgebase}
 \label{sec:linkedataServiceKnowledgebase}
@@ -704,7 +708,7 @@ It is again the role of the Data Center to choose relevant links. However, we su
 
 For Query tool Service (or web Service) we haven't found any equivalent in DataCite of the \vorent{servedBy} term of the VO registry to link datasets with services. \\
 
-For Information System/Service, then terms like \dataciteterm{isSourceOf}, \dataciteterm{isCompiledBy} can be envisaged.
+For Organized System Service, then terms like \dataciteterm{isSourceOf}, \dataciteterm{isCompiledBy} can be envisaged.
 
 
 
@@ -756,7 +760,7 @@ If for any unfortunate reason, the datasets is no more available, provide a \tex
 We are focusing on a sub-list of particularly interesting terms that should be given a particular attention in curation.
 
 
-\subsection{Choosing a type for resources}\label{sec:resourcetype}
+\subsection{Choosing a resource type}\label{sec:resourcetype}
 The Resource type is specified with  \dataciteterm{ResourceTypeGeneral} which use a controlled vocabulary, completed with a \dataciteterm{ResourceType} which is a free text.
 
 Examples: Choosing the good Resource type leads to the Data publisher.
@@ -881,7 +885,7 @@ For example, a dataset provided by a Data Center A may have been created months 
 Note: dates have not to be used as versioning.
 
 \paragraph{Dates for Services, Knowledgebase and Collection}
-By nature, these type of resources may evolve. The frequency with which content is updated may make inappropriate to use the update date. For changes in architecture or data model, versions should be used.
+By nature, these type of resources may evolve. The frequency of updates may make inappropriate to use the update date. For changes in architecture or data model, versions should be used.
 
 
 \subsection{Title and description}
@@ -955,8 +959,22 @@ Datacite metadata (see "Rights" in the DOI metadata schema)
 ]
 \end{lstlisting}
 
+\subsection{Funding references}
+\textbf{\color{red}This section has been added by Gilles (not in sections)}\\
+
+Financial support can be attached to a DOI using \dataciteterm{fundingReferences}.
+
+Funds information is expressed with a reference to the organism, generally using a Crossref Funder ID (OFR, Open Funder Registry)\footnote{\url{https://www.crossref.org/services/funder-registry/}} or a RoR, and an award reference (see DataCite guidance)
+
+
+Example: DOI generated by NASA Planetary Data System:
+\url{https://api.datacite.org/dois/application/vnd.datacite.datacite+xml/10.26007/97r3-1e19}
+
+
+
 \subsection{Identifier for project}
 \textbf{\color{red}This section has been added by Gilles (not in sections)}
+
 At the time of writing, RAID (Research Activity Identifier) is new in the open DATA scene. We do not have feedbacks to provide any best practice. However, an agreement between the RAID maintenance organisation (Australian Research Data Commons\footnote{\url{ Australian Research Data Commons}}) and DataCite makes possible to generate such identifiers from DOIs (using \dataciteterm{resourceTypeGeneral} "Project")
 
 
@@ -965,7 +983,7 @@ At the time of writing, RAID (Research Activity Identifier) is new in the open D
 \textbf{\color{red}This section has been added by Gilles (from sections)}
 
 \begin{enumerate}
-	\item Select the type of your Resource and adopt usage specific to the chosen category (see \ref{sec:resourcetype}).
+	\item Select the \textbf{Resource type} and adopt the usage specific to the chosen category (see \ref{sec:resourcetype}).
 	\item \textbf{Landing page} (see \ref{sec:landingpage})
 	\begin{itemize}
 		\item Check if DOI metadata are displayed in the landing page 
@@ -1005,6 +1023,8 @@ This is not an update of the \citet{2022ApJS..260....5C} appendix.
 This is meant to also provide additional information about what kinds of DOIs are minted and what types of deposits the archive will accept.
 
 \subsection{Domain Specific repositories}
+\textbf{\color{red}Gilles: TODO add brief descriptions}\\
+
 \begin{enumerate}
 	\item CADC
 	\item CDA
@@ -1018,12 +1038,16 @@ This is meant to also provide additional information about what kinds of DOIs ar
 \end{enumerate}
 
 \subsection{Generalist repositories}
+\textbf{\color{red}Gilles: just add a brief description}\\
+
 \begin{enumerate}
-	\item Dataverse
-	\item Dryad
-	\item Zenodo
-	\item Other?
+	\item Dataverse: Open source research data repository software.\\
+	Dataverse includes data management from input to the output, provides DOI, OAI-PMH.
+	\item Dryad: Open data publishing platform
+	\item Zenodo: Zenodo developed by the CERN provides Invenio (Open Software) which is an alternative to Dataverse 
+	\item Other? 
 \end{enumerate}
+
 
 %--------------------------------------------------------------------------------------
 \section{Important DataCite Metadata Case Studies}
@@ -1035,27 +1059,40 @@ CDA is doing cool things with related identifiers.
 
 See \citep{2023ChNew..34....5D}, \citep{2018EPJWC.18612011R}.
 
+	
 \subsection{VAMDC \& Zenodo workflow}
 The good and the bad of transitory data citation.
 
 See \citep{2018Galax...6..105M}.
 
-\subsection{ESA}
-\textbf{\color{red} I proposed to add ESA}
+\textbf{\color{red} The VAMDC Consortium is a consortium of Institutes and Research Institutions that share a common technical and political framework for the distribution and curation of atomic and molecular data.}
+{\color{red} 
+VAMDC provides a Query Store including data storage for query result with possible DOI generation based on Zenodo}\\
 
-\subsection{Vizier}
-Vizier produces some awesome DataCite metadata.
+Example:\\
+VAMDC query Store record: \url{https://cite.vamdc.eu/references.html?uuid=a819e879-760d-4ede-831a-38d359b5864c}\\
+Landing page: \url{https://zenodo.org/records/11243136}
+
+\subsection{ESA}
+\textbf{\color{red}  add ESA ?}
+
+Example:\\
+Landing page: \url{https://doi.org/10.5270/esa-qa4lep3}\\
+(JSON) DOI: \url{https://api.datacite.org/dois/10.5270/esa-qa4lep3}
+
+\subsection{VizieR}
+VizieR produces some awesome DataCite metadata.
 
 
 \textbf{\color{red} added by Gilles - }\\
 
-The VizieR  catalogue service of the CDS makes DOIs for data published in journals or by space / base-ground agencies. The data are curated by CDS with added-values such as cross-corelations, links and metadata required to be queried though the Virtual Observatory. Each DOI corresponds to a VizieR catalogue which needs to be attached to a reference article. This is a POST publication data flow that generates a DOI, a landing page, OAI-PMH outputs and schema.org.\\
+The VizieR  catalogue service is a CDS service for data published in journals or by space / base-ground agencies. The data are curated by CDS with added-values such as cross-corelations, links and metadata required for the Virtual Observatory. It is a POST publication data flow that generates DOI, landing page, and which disseminate metadata throw the Registry of the Virtual Observatory and through OAI-PMH.\\
 
 
 Example:\\
 Landing page: \url{https://cdsarc.cds.unistra.fr/viz-bin/cat/J/AJ/167/89}\\
 IVOA record: \url{https://cds.unistra.fr/registry/?verb=GetRecord&metadataPrefix=ivo_vor&identifier=ivo://cds.vizier/J/AJ/167/89}\\
-DOI: \url{https://api.datacite.org/dois/10.26093/cds/vizier.51670089}
+(JSON) DOI: \url{https://api.datacite.org/dois/10.26093/cds/vizier.51670089}
 
 \section{Workflows}
 \textbf{\color{red} added by Gilles - TODO: discuss the relevance}
