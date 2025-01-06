@@ -37,6 +37,8 @@ see [checklist.md](checklist.md)
 - dates [dates.md](dates.md)
 - title and description [titles.md](titles.md)
 - licences [metalicences.md](metalicences.md)
+- fundings [funding.md](funding.md)
+- RAID [raid.md](raid.md)
 - alternate identifier
 - linked data:
   - collection of resources

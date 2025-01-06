@@ -276,7 +276,6 @@ Collection DOIs may result from queries performed at a Service.
     	\item TOSS (Tübingen Oscillator Strengths Service, GAVO):\\ \url{https://api.datacite.org/dois/application/vnd.datacite.datacite+xml/10.21938/3I01ISNUCODNH1ZJBCVUWA}
     \end{itemize} 
 
-    DataCite gives the 
 }
 
 \textbf{\color{red} added by Gilles}
@@ -435,6 +434,8 @@ curl -LH "Accept: application/x-bibtex" https://doi.org/10.5270/esa-1ugzkg7
 	}
 \end{lstlisting}
 
+Note that bibtex standard doesn't provide a specific term for dataset. 
+"@dataset" is an add-on proposed in this note which is more precise than "@misc".\\
 
 \begin{table}[th]
 	\begin{tabular}{lll}
@@ -452,6 +453,7 @@ curl -LH "Accept: application/x-bibtex" https://doi.org/10.5270/esa-1ugzkg7
 	publisher & Publisher & MUST \\
     copyright & Rights & RECOMMENDED, see \ref{sec:licenses} \\
     DOI & & MUST \\
+    resource\_type  & resourceType & MUST, see \ref{sec:resourcetype}\\
     \sptablerule
 	\end{tabular}%
 \caption{\label{tab:astroDOIs1}linking bibtex and DataCite schema}
@@ -459,7 +461,7 @@ curl -LH "Accept: application/x-bibtex" https://doi.org/10.5270/esa-1ugzkg7
 
 Citation in APA style:
 \begin{verbatim}
-{authors} ({year}). {title} [Data set]. {publisher}. {DOI}
+{authors} ({year}). {title} [resource_type]. {publisher}. {DOI}
 \end{verbatim}
 
 VizieR example: (catalogue J/MNRAS/320/451)
@@ -597,7 +599,7 @@ Then the products are linked to the catalogue which has a DOI too.
 
 \paragraph{Particular interest for Collections}
 In a case of Collection, DataCite provides terms to link a resource  to its collection. 
-\dataciteterm{isPartOf}  seems to be appropriate to link an individual Dataset to a Collection, however, the verb used for linking depends of the Data Center architecture. \\
+\dataciteterm{isPartOf}  seems to be appropriate to link an individual Dataset to a Collection. However, the verb used for linking depends of the Data Center architecture. \\
 
 \textbf{\color{red}This section has been added moved from "best Practices for DOI workflows"  by Gilles }
 
@@ -727,7 +729,7 @@ It is recommended to adopt a version number folowing the pattern:
 
 Different mechanisms exist:
 \begin{itemize}
-\item Zenodo \footnote{\url{https://zenodo.org/}} method: makes a DOI collection of versions. Each version has its own DOI which are linked (related identifier)with the DOI collection.
+\item  \footnote{\url{https://zenodo.org/}} method: makes a DOI collection of versions. Each version has its own DOI which are linked (related identifier)with the DOI collection.
 \item Make 1 DOI for version, link the DOI version together using related identifier \dataciteterm{isNewVersionOf}, \dataciteterm{isPreviousVersionOf}
 \end{itemize}
 
@@ -1043,9 +1045,10 @@ This is meant to also provide additional information about what kinds of DOIs ar
 \begin{enumerate}
 	\item Dataverse: Open source research data repository software.\\
 	Dataverse includes data management from input to the output, provides DOI, OAI-PMH.
-	\item Dryad: Open data publishing platform
-	\item Zenodo: Zenodo developed by the CERN provides Invenio (Open Software) which is an alternative to Dataverse 
-	\item Other? 
+	\item Dryad: Open data publishing platform for authors.
+	\item Zenodo: Zenodo is a popular platform for authors. Zenodo uses the DataCite and generates DOI. The curation leads to authors.\\
+	Zenodo developed by the CERN provides Invenio (Open Software) which is an alternative to Dataverse 
+	\item Other? {\color{red} (added by Gilles) FAIRsharing \cite{https://doi.org/10.25504/fairsharing.rd6gxr}: A curated, informative and educational resource on data and metadata standards, inter-related to databases and data policies. The Standards and endorsed notes provided by the IVOA have a DOI created by FAIRsharing}
 \end{enumerate}
 
 
@@ -1086,7 +1089,7 @@ VizieR produces some awesome DataCite metadata.
 
 \textbf{\color{red} added by Gilles - }\\
 
-The VizieR  catalogue service is a CDS service for data published in journals or by space / base-ground agencies. The data are curated by CDS with added-values such as cross-corelations, links and metadata required for the Virtual Observatory. It is a POST publication data flow that generates DOI, landing page, and which disseminate metadata throw the Registry of the Virtual Observatory and through OAI-PMH.\\
+The VizieR catalogue service is a CDS service for data published in journals or by space / base-ground agencies. The data are curated by CDS with added-values such as cross-corelations, links and metadata required for the Virtual Observatory. It is a POST publication data flow that generates DOI, landing page, and which disseminate metadata, especially in the Registry of the Virtual Observatory.\\
 
 
 Example:\\
