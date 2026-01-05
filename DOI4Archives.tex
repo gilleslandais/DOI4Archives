@@ -1,20 +1,21 @@
 \documentclass[11pt,a4paper]{ivoa}
 \input tthdefs
+\lstset{flexiblecolumns=true}
 \usepackage{todonotes}
 \usepackage{array}
-\usepackage{soul}
+\marginparwidth=4cm
 
-\usepackage{graphicx}
+\newcommand{\datacitedocurl}{https://datacite-metadata-schema.readthedocs.io/en/4.6}
+\newcommand{\datacitepropurl}[1]{\datacitedocurl/properties/#1}
+\newcommand{\dataciteterm}[1]{\textcolor{blue}{DataCite:\textbf{#1}}}
+\newcommand{\datacitetag}[2]{\href{\datacitepropurl{#1}}{\textcolor{blue}{DataCite:\textbf{#2}}}}
 
-\newcommand{\dataciteterm}[1]{\colorbox{lightgray}{DataCite:\textbf{#1}}}
+%\href{https://datacite-metadata-schema.readthedocs.io/en/4.6/properties/date/#a-datetype}{DataCite:updated}
 \newcommand{\important}[1]{
 	\begin{bigdescription}
 		\item \color{ivoacolor}\textbf{Note} #1
 	\end{bigdescription}
 }
-
-
-
 
 \title{Best practices for the creation of and metadata for digital object identifiers in astronomy archives}
 
@@ -25,1169 +26,1255 @@
 \author[https://orcid.org/0000-0003-0666-6367]{August Muench}
 \author[https://orcid.org/0000-0003-4868-5873]{Gilles Landais}
 \author[https://orcid.org/0000-0003-3073-0605]{Raffaele D'Abrusco}
-\author[https://orcid.org/0000-0002-8300-9443]{Anne Raugh}
+\author[https://orcid.org/0000-0002-8300-9443]{Anne Catherine Raugh}
 \author[https://orcid.org/0000-0003-4264-2450]{Edwin Henneken}
 \author[https://orcid.org/0000-0001-7915-5571]{Baptiste Cecconi}
-\author[]{to complete: Alberto Accomazzi ?, ESA people ?}
-\editor{August Muench, Gilles Landais}
+\author[https://orcid.org/0000-0001-5982-167X]{Tim Jeness}
+
+\editor{G. Landais}
 
 % \previousversion[????URL????]{????Concise Document Label????}
 \previousversion{This is a draft}
 
 
 \begin{document}
-\todo{This is only an outline! Everything is still to be done.}
 
 \begin{abstract}
 Many astronomy archives are minting digital object identifiers (DOI) for datasets and services. This document aims at summarizing current workflows for creating and using DOIs, diagnose issues in the metadata of existing DOIs, and develop best practices for workflows and metadata for future DOI deployment. This note is focused on archives in Astronomy, Planetary Science, and Heliophysics. Additional domains may be considered at a later time.
 \end{abstract}
 
-
-%-------------------------------------------------------------------------------------------
 \section*{Acknowledgments}
-
-ESA (C.Arviset, M-H. Sarmiento, A.Masson), ADS (A.Accomazzi) and IVOA members active in DataCP sessions.
-
-%-------------------------------------------------------------------------------------------
-\section*{Conformance-related definitions}
-
-The words ``MUST'', ``SHALL'', ``SHOULD'', ``MAY'', ``RECOMMENDED'', and
-``OPTIONAL'' (in upper or lower case) used in this document are to be
-interpreted as described in IETF standard RFC2119 \citep{std:RFC2119}.
-
-The \emph{Virtual Observatory (VO)} is a general term for a collection of federated resources that can be used to conduct astronomical research, education, and outreach.
-The \href{https://www.ivoa.net}{International Virtual Observatory Alliance (IVOA)} is a global collaboration of separately funded projects to develop standards and infrastructure that enable VO applications.
+Alberto Accomazzi (ADS), Christophe Arviset (ESA), Arnaud Masson (ESA), Maria Henar Sarmiento (ESA), Markus Demleitner (GAVO), Andre Schaaff (CDS) and all participants of the DCP sessions.
 
 
-%-------------------------------------------------------------------------------------------
-\section{Introduction}
-\label{sec:intro}
+\section{Concepts and definition}\hypertarget{concept-and-definition}{}\label{sec:concepts-and-definition}
 
+\subsection{DOI landscape}\hypertarget{doi-landscape}{}\label{sec:doi-landscape}
 
-\subsection{General observations} 
-We focus on roles of digital object identifiers (DOIs) rather than the full landscape of FAIR data \citep{Wilkinson2016}. It is beyond the scope of this document to address all aspects of FAIRness. We consider that it is also unreasonable for DOIs to be laden with the problems of enabling all aspects of FAIRness. Instead we aim for this document to guide archives with achieving compliance for specific aspects of enabling FAIR data. In this document we are using DataCite Commons \footnote{\url{https://commons.datacite.org}}. This document adopts DataCite Metadata Schema 4.6. We choose relevant examples from existing DOI taken in approximately 75000 dataset DOIs in astronomy (See Table \ref{tab:astroDOIs1}).
+The DOI is widely used in the academic publishing process for articles, datasets or services. It is a persistent identifier created in 1996 for the long-term management of digital resources which includes both a URL and metadata that can be modified over time. These capabilities allow the DOI to be in phase with the data lifecycle and to be free of possible change of URL location.
 
+The DOI is particularly well suited to citation. From its metadata, it is possible to extract the information needed to generate BibTeX. In addition, the DOI has a resolver that translates a DOI into a URL. The mechanism is supported by an architecture that allows to modify the URL over time. This feature makes the DOI easy to use for citing or linking resources in articles or from any web pages.
+%In addition, the DOI has a URL resolver that allows using the resource to be linked from an article or any web page.
 
+The architecture is robust and has been generalized to identify other types of data than those mentioned above. For example, DOIs are used for instruments (\href{https://rubinobservatory.org/}{Rubin Telescope}), and the \href{https://datacite.org/}{DataCite} organization which provides DOI for datasets, is a partner of \href{https://ardc.edu.au/}{ARDC} to register identifiers for projects (\href{https://support.datacite.org/docs/raids}{RAID}).
 
-\subsection{DOI landscape}
-DOIs are a key element of the scholarly publication process. It is a persistent identifier for resources, which includes both a URL and metadata. The DOI is mostly used for sustainable resources such as scholarly journal articles, for datasets and softwares.\\
+With the advent of open science, DOI has taken on a key role in the dissemination of information. It enforced the data traceability by linking resources of different types according to relationships of dependency or authorship and includes other identification standards such as the author identification (\href{https://orcid.org/}{ORCID}), organizations (\href{https://ror.org/}{ROR}) or Funders.
 
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.9\textwidth]{PIDGraph.png}
+\end{center}
+\caption{Connection between the Entities in the PID Graph, August 2020 (Cousijn et al.) }
+\end{figure}
 
-The DOI is a persistent identifier that emerges today among other identifiers such as the ORCID\footnote{\url{https://orcid.org/}}, for authors, the RoR\footnote{\url{https://ror.org/}} for organization or the RAID\footnote{\url{https://raid.org/}} for projects.
+DOI enables the implementation of search engines and knowledge graphs, improving the discovery and traceability of digital resources.
 
-It enables a resource to be reliably identified, regardless of the professional network in which it is published. It improves traceability and citation with standard metadata that can be harvested and reused. 
+\subsection{Use cases}\hypertarget{use-cases}{}\label{sec:use-cases}
 
-The DOI metadata can also include references and related products. This network of resources builds a so-called scholarly (or scientific) knowledge graph\footnote{\url{https://doi.org/10.1162/qss_e_00160}}.\\
-
-
-There are several DOI providers. CrossRef\footnote{https://www.crossref.org/} is the main DOI provider for scholarly communications. Datacite\footnote{https://datacite.org/} is the main DOI provider for data publication. Each provider has a specific metadata schema, extending DublinCore, and design to support the scope of the resources related to the DOI they provide.
-Data Centers minting DOIs for their datasets should carefully inform and curate the metadata registered in the DOI provider database.\\
-
-
-DOIs are also used for grants (see, e.g., https://doi.org/10.3030/824064, which is redirecting to the ESCAPE project page on the CORDIS web site of European Commission), for instruments (see, e.g., the recent Datacite implementation of the RDA PID for instrument recommendation), for repositories (see, e.g., http://doi.org/10.17616/R31NJMS9, which is redirecting to the PADC record in the Re3data registry), or for FAIR concepts and resources (see, e.g., https://doi.org/10.25504/FAIRsharing.L4Q3H9, which is an identifier for the concept of “IVOA identifier” in FAIRsharing’s registry). It is thus not always used for scholarly citations, but also as persistent identifiers to resources.\\
-
-In this document, we propose good practices to provide efficient citation, interconnections with related resources, including IVOA resources.
-
-
-
-
-%DOIs are part of the scientific article publication process. The DOI is a sustainable identifier applied to a web resource that emerges today among other identifiers such  as the ORCID\footnote{\url{https://orcid.org/}}, for authors, the RoR\footnote{\url{https://ror.org/}} for organization or the RAID\footnote{\url{https://raid.org/}} for projects.
-%
-%As it is unique, it enables a resource to be reliably identified, regardless of the professional network in which it is published. It improves traceability and citation with standard metadata that can be harvested and reused. For instance, BibTeX can be extracted from DOI. The DOI information may also includes references and related products that build up a graph of linked resources step by step.
-%
-%DOIs are widely used for data, and although their metadata is slightly different from articles, they work very well together.
-%
-%Data Centers motivated for citation and interconnection, must curate relevant metadata. 
-%In this document, we will develop good practices to provide well citation, interconnections with related resources, including IVOA resources.
-
-
-\subsection{Use case}
+There are many reasons for creating a DOI. Below, we list the use cases that we found to be particularly relevant and which motivated to write this note.
 
 \begin{enumerate}
-	\item \textbf{Citation}. Data producers (authors) and providers (data centers) expect that the datasets or collections they are publishing are  cited in scholarly communication (journal articles, proceedings, posters, etc.) so that their contribution to the field is acknowledged and attributed. Using the regular citation method allows to treat data and article references equally and use the same tools to count citation and measure impact. Hance data producers and providers are expecting that data reuse is acknowledged through regular citation. 	
-	%redo (Edwin)
-	Users also expect the Data Center website to provide a way to cite the resource.
-	
-	\item \textbf{Reuse}. The Data consumer expects to get information about origin and rights. For access rights, existing licence must be displayed but also readable by software.
-	
-	\item \textbf{Findability}. Data published are disseminated in networks like the VO registry, google dataset search\footnote{\url{https://datasetsearch.research.google.com/}} or the EOSC EU node (see \ref{sec:bestpractice:providing}). The users as well as the Data Center expect that the entries are consistent.
-	
-	\item \textbf{Impact}. Data centers as well as authors need reports about the usage activity of their work. They query dedicated services (eg: OpenCitation) that make reports and are capable to graph the citation of a specific resources..
-	
-	\item \textbf{Reproducibility}. A user expects sustainable access to a resource that he cited in an article or that he used in an experiment. He or she expects that the experiment is reproducible. If it uses a service or a knowledgebase (see \ref{sec:intro:kdbs}), he or she expects that the protocols stay compatible with the original implementation. For datasets, he or she should expect that data present in the original study have not been altered.
-	
+\item \textbf{Citation.} Data producers (authors) and providers (data centers) expect that the datasets or collections they are publishing are  cited in scholarly communication (journal articles, proceedings, posters, etc.) so that their contribution to the field is acknowledged and attributed. Using the regular citation method allows to treat data and articles in the same way and use the same tools to count citation and measure impact. Hence data producers and providers are expecting that data reuse is acknowledged through regular citation.
+
+\item \textbf{Reuse.} The Data consumer expects to get information about origin and rights. For access rights, existing license must be displayed but also readable by software.
+
+\item \textbf{Findability.} Data published are disseminated in networks like the VO registry \citep{std:registry}, google dataset search or the \href{https://open-science-cloud.ec.europa.eu/}{EOSC EU} node. The users as well as the Data Center expect that the entries are consistent.
+
+\item \textbf{Impact.} Data centers as well as authors need reports about the usage activity of their work. They query dedicated services (eg: \href{https://opencitations.net/}{OpenCitation}) that are able to make reports and to generate graphs of citation.
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{doigraph.png}
+	\end{center}
+	\caption{DOI Graph created by citationgraph.org from a vizier DOI }
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{DOIgraphart.png}
+	\end{center}
+	\caption{DOI Graph created by citationgraph.org from an article published in AJ (doi: 10.3847/1538-3881/ad1a18) }
+\end{figure}
+
+
+\item \textbf{Reproducibility.}  A user expects sustainable access to a resource that he cited in an article or that he used in an experiment. He or she expects that the experiment is reproducible. If it uses a service or a knowledge base, he or she expects that the protocols stay compatible with the original implementation. For datasets, he or she should expect that data in the original study have not been altered.
 \end{enumerate}
 
-%\begin{enumerate}
-%	\item Authors and Data Centers expect that the resources they created or provide will be included in the citations of each article or resources which used them. It needs well curated BibTeX, linking the Data. 
-%	%redo (Edwin)
-%	\hl{Users also expect the Data Center website to provide a way to cite the resource.}
-%	
-%	\item The Data consumer expects to get information about origin and rights. For access rights, existing license must be visible but also readable by software.
-%	
-%	\item Data published are disseminated in networks like the VO registry, DatasetSearch or the EOSC EU node (see \ref{sec:bestpractice:providing}). The users as well as the Data Center expect that the entries are consistent.
-%	
-%	\item The Data Center as well as authors needs reports about the usage activity of their work. They query dedicated services (eg: OpenCitation) that make reports and are capable to graph the citation of a specific resource.
-%	
-%	\item 
-%	\hl{A user expects sustainable access to a resource that he cited in an article or that he used in an experience.}
-%	It expects that the experience is reproducible. If it uses a service or Knowledgebase, it expects that the protocols stay compatible with the original implementation. For Dataset, it could expect that data have not been altered. 
-%	
-%	%%reproducibility (not possible with evolving dataset, eneous with service,hors-contexte pour KD)
-%\end{enumerate}
+\subsection{Issues}\hypertarget{issues}{}\label{sec:issues}
 
-\subsection{Example of existing DOI}
-
-Table \ref{tab:astroDOIs1} lists a short selection of DOI covering different usage.
-
-
-
-\begin{table}[th]
-\begin{tabular}{lclcr}
-\sptablerule
-\textbf{Archive} & \textbf{Prefix} & \textbf{DataCite Client} & Yo & \textbf{Count}\\
-\sptablerule
-Canadian Astronomy Data Centre        & 10.11570 & nrc.cadc        & - &    104 \\
-Chandra Data Archive                  & 10.25574 & si.cda          & - & 57,724 \\
-ESO Science Archive Facility          & 10.18727 & tib.esolib      & - &    447 \\
-European Space Agency                 & 10.5270  &                 & - & 28,858   \\%TODO, crossref?
-IPAC (26131 --- 26135)                & 10.2613X & caltech.ipacdoi & - &    680 \\%617+8+44+5+6
-Mikulski Archive for Space Telescopes & 10.17909 & stsci.mast      & - &  3,034 \\
-NASA Planetary Data System            & 10.17189 & nasapds.nasapds & - &  2,287 \\
-++Small Bodies Node of PDS            & 10.26007 & sbn.archive     & - &  4,837   \\%242 ?
-Strasbourg Astronomical Data Center   & 10.26093 & inist.cds       & - & 22,181 \\
-\sptablerule
-\end{tabular}%
-\caption{\label{tab:astroDOIs1} Example of organizations generating DOIs (statistics generated 2025/03/28).}
-\end{table}
-
-\todo{TODO: Please, add ObsParis !}
-
-
-\begin{admonition}{Note}
-Dataset DOIs do not lead to data, or what they do lead to is widely varied.
-\end{admonition}
-
-
-%-------------------------------------------------------------------------------------------
-\section{Role within the VO Architecture}
-
-
-\subsection{Status of DOI in the Virtual Observatory}
-The IVOA registry uses IVOA identifiers (IVOID) \citep{note:ivoid} which are only usable within the IVOA registry ecosystem. At the time of writing, DOIs are not fully integrated in VO standards. They can be used in the IVOA  Registry since VOResource 1.2 \citep{std:registry} for any ResourceName such as  alternate identifier or related resources. They are also used in the DataOrigin Note \citep{note:dataorigin} as metadata that a service can provide in the result of a query and in the BibVO note \citep{note:bibvo} which is an architecture based on registry to link Data and articles.
-
-
-
-
-\subsection{Comparison with the VO Registry schemas}
-
-\paragraph{The IVOID} is a unique identifier for resource (dataset or service) indexed in the Virtual Observatory registry. 
-Registry records has metadata which includes entry points to access the resource via WEB services. The access information needs a machine interpretation and its usage is generally hidden for users.
-The IVOID and the IVOA Registry are meant to ensure findability and technical interoperability (how do I find a service and what protocol can I use?). They are mostly used for services. When they represent datasets, the services to access the data are described in details. For instance the vocabulary of the registry extends the relations with a term "isServedBy" to link Data and Service. The absence of an equivalent term in DataCite makes it illusory to try and transcribe the same level of interoperability in DOI.
-
-\paragraph{The DOI} and their metadata  are persistent identifiers for resources. The DOI is visible for users and it handles a landing page human-readable. The metadata include attribution, references, relations, licence, but nothing about programmatic access or interoperability.
-
-%In this sense, the IVOID differs from the DOI, which is visible to the user and which has a URL resolver that does not require a machine interpretation.}
-
-%\hl{In some cases, the IVOID is extended to specify a sub-part of the resource.} For instance, an IVOID of a tableset can be completed to specify a particular record and then to be used to generate a Datalink.
-
- 
-% The VO Registry is  based on VODataService and VOResource. It includes Resources; Datasets and Services that can be linked with term \vorent{IsServedBy}. 
- 
-% This relation allows to provide a strong interoperability in the Virtual Observatory. The absence of an equivalent term in DataCite makes it illusory to try and transcribe the same level of interoperability in DOI.\\
- 
- 
-% \todo{see term like isSourceOf, isCompiledBy that could be used to linkk a service/organization}
- 
-We propose in section \ref{sec:altidentifier} a method to facilitate link between DOI and registry record.\\
-
- 
-VO Registry and DataCite schemas are based on DublinCore terms extended with their own specifications. Despite a common basis, the vocabularies differ. The DataOrigin note provides in Appendix a mapping between DataCite and VOResource for a sub selection of terms. Note that the endorsement process of DataOrigin has not been initiated.
- 
- 
-%-------------------------------------------------------------------------------------------
-\section{Extant use of Digital Object Identiﬁers in Archives}
-
-
-\label{sec:usage}
-We observe four different uses for DOIs in astronomy-related archives. Identifiers are being assigned for individual datasets (at various levels of granularity); for collections of datasets; for services; and for what we will call "knowledgebases" or curated meta-collections of data and calculated results. These uses are described in more detail below.
-
-
-\subsection{Datasets}
-\label{sec:intro:datasets}
-Dataset DOIs are the most common usage in astronomy-related repositories, and represent about >>XX\% of all such DOIs. Individual datasets are being assigned DOIs at various levels of granularity. At the most granular level, every observation \footnote{\url{https://cxc.cfa.harvard.edu/csc/organization.html}} in the Chandra Data Archive (CDA) is assigned an individual DOI.
-Similarly, the European Space Agency assigned DOIs to every individual Herschel, ISO, Planck and XMM-Newton observation. This list also includes every Hubble Space Telescope (HST) observation, which are also archived at the Mikulski Archive for Space Telescopes (MAST) but are not assigned DOIs individually by MAST. 
-Individual dataset DOIs are implemented mostly consistent with the usage of DOIs by institutional repositories, generalist repositories (e.g., Zenodo), etc. \todo{move landingpage into the landingpage section} That is, the dataset DOI resolves to a landing page (see \ref{sec:landingpage}) describing the dataset. In some cases the landing pages are rich summaries of the dataset, often including much more information than could be gleaned from the DOI metadata alone. In other cases the landing pages pop the user into a web user interface with very little (or almost no) contextual information about the DOI. 
-
-
-Dataset DOIs are also being minted for "High-Level Science Products" (HLSP)\todo{TODO: Please add an HLSP example}. Such HLSP datasets are not static and can grow over time, accumulating both data revisions and additions. HLSP landing pages\todo{move landingpage into the landingpage section} for DOIs have no set structure or content and change regularly as the linked data evolve.
-None of these dataset DOIs are versioned. The data discovered by following a dataset DOI to an individual observation will change based upon the version of the archive pipeline used to create it, up real-time or on-demand reprocessing for some archives (see also \ref{sec:evolving}).\\
-
-The typical Resource type in DataCite is DataCite:dataset
-
-
-\textbf{\color{red}TODO: (see also) explain difference between  knowledgebase and evolving dataset.}
-
-\textbf{\color{red}Question: what is the difference between knowledgebases and  HLSP ?}
-
-
-\subsection{Collections}
-\label{sec:intro:collections}
-\todo{TO REVIEW!}
-
-Collection-type DOIs direct users to a collection of individual data records in a particular archive.
-Examples of collection-type DOIs include the DOI services provided by the Mikulski Archive for Space Telescopes (MAST)\footnote{\url{https://archive.stsci.edu}} \citep{2018ApJS..236...20N}, Chandra Data Archive (CDA) \citep{2018ApJS..236...20N}, and the VAMDC Consortium\footnote{\url{https://vamdc.org}} Query Store service \citep{2018Galax...6..105M}.  
-There is significant variation in the expected use cases for these Collection DOIs. 
-There are also strong variations in the metadata of Collection-type DOIs.
-
-
-Considering use-cases, both MAST and Chandra Collection DOIs collect dataset identifiers within their respective databases.
-In both cases there is no expectation that these Collection DOIs would ever themselves collect attribution (i.e., be cited in the reference list of a corresponding Journal article).
-However, VAMDC Collection DOIs, are intended to collect and distribute credit to the collection of database identifiers they contain.
-They attempt to distribute this citation/credit to the collection of resources by "citing" all the related resources in the saved VAMDC query record.
-Because this depends upon the capabilities of both the chosen DOI minting service (Zenodo) and the DataCite Schema, additional notes on the details and the outcomes of this effort is provided in one of our case studies in Appendix B. 
-
-Similarly the metadata of Collection DOIs vary between MAST and CDA examples. 
-As described in \citet{2023ChNew..34....5D}, Chandra Data Collection DOIs create complete records of individual using \texttt{relatedIdentifier} tags and predicates. 
-The metadata of MAST Collection DOIs do not provide detailed information on the individual MAST records collated in the collection.
-
-
-
-See \ref{sec:citation}, \ref{sec:landingpage}, \ref{sec:linkeddata}, \ref{sec:resourcetype}, \ref{sec:authors}, \ref{sec:dates}
-
-The typical Resource type in DataCite is \dataciteterm{Collection}\\
-
-
-\textbf{\color{red}Alternative text (remove VAMDC and the citation part which will be in section 4.2.3)}\\
-
-\textbf{\color{red}Collection-type DOIs direct users to a collection of individual data records that are related to each other (e.g. : individual observations from the same survey or archive, etc.). The collection provides access to resources (identified with a DOI or with another identifier) via relationships defined in the DataCite schema.}
-
-\textbf{\color{red}Examples of collection-type DOIs include the DOI services provided by the Mikulski Archive for Space Telescopes (MAST) \footnote{\url{https://archive.stsci.edu}} \citep{2018ApJS..236...20N}, Chandra Data Archive (CDA) \citep{2018EPJWC.18612011R}. There is significant variation in the expected use cases for these Collection DOIs. There are also strong variations in the metadata of Collection-type DOIs.}
-
-\textbf{\color{red}Considering use-cases, both MAST and Chandra Collection DOIs collect dataset identifiers within their respective databases. For instance, Chandra Collection DOI is made of DOIs of different types. Its metadata and related identifiers are defined to make a Chandra collection DOI the most versatile and general aggregation that can be obtained using Chandra data "entities". }
-
-\textbf{\color{red}Similarly the metadata of Collection DOIs vary between MAST and CDA examples. As described in \citet{2023ChNew..34....5D}, Chandra Data Collection DOIs create complete records of individuals using \texttt{relatedIdentifier} tags and predicates. The metadata of MAST Collection DOIs do not provide detailed information on the individual MAST records collated in the collection.}\\
-
-
-\textbf{\color{red}
-(TODO: add MASER example (Baptiste example)
-The collection https://doi.org/10.25935/1SXH-AQ56 is a grouping of https://doi.org/10.25935/2F8G-C505, https://doi.org/10.25935/XS9J-ND90, https://doi.org/10.25935/F8NS-0911, https://doi.org/10.25935/5JFX-DH49, https://doi.org/10.25935/9ZAB-FP47, https://doi.org/10.25935/ZKXB-6C84,
-https://doi.org/10.25935/6D16-BM97 and https://doi.org/10.25935/B9NF-9558.
-)}
-
-
-\subsection{Services}
-\label{sec:intro:services}
-
-Examples of DOIs for services include IRSA (DUST). Service DOIs lead to query tools. They may lead to query results. 
-Sometimes Collection DOIs act like Service DOIs but they are not. Collection DOIs may result from queries performed at a Service.\\
-
-Examples:
-    \begin{itemize}
-    	\item the VizieR Service, doi:\\ \url{https://api.datacite.org/dois/application/vnd.datacite.datacite+xml/10.26093/cds/vizier}
-    	\item TOSS (Tübingen Oscillator Strengths Service, GAVO):\\ \url{https://api.datacite.org/dois/application/vnd.datacite.datacite+xml/10.21938/3I01ISNUCODNH1ZJBCVUWA}
-    \end{itemize}
-
-
-See \ref{sec:landingpage}, \ref{sec:linkeddata}, \ref{sec:resourcetype}, \ref{sec:authors}, \ref{sec:dates}
-
-
-The typical Resource type in DataCite is \dataciteterm{Service}
-
-\subsection{Knowledgebases}
-\label{sec:intro:kdbs}
-
-A knowledgebase is a collection of material collated from many discrete sources. All of the values contained in a knowledgebase have a provenance traced to other resources and have been curated into a single database for reuse. 
-Examples include: Simbad \citep[as originally described in, ][]{2000A&AS..143....9W}, NASA Exoplanet Archive (NEA) \citep{NEA12-doi2bib} \citep[as originally described in,][]{2013PASP..125..989A}, NASA Extragalactic Database (NED) \citep{NED1-doi2bib} \citep[as originally described in,][]{1991ASSL..171...89H}. 
-
-Current observations about DOIs for knowledgebases include:
-
-\begin{itemize}
-	\item DOIs for knowledgebases lead users to interstitial landing pages rather than directly to the collated, curated resources.
-	\item DOIs for knowledgebases do not lead to individual values, e.g., the results of a query against that knowledgebase.
-	\item DOIs for knowledgebases never provide information in their\textit{metadata} about the \textit{state} of a knowledgebase: its current version; last update; etc. Nor is this information on the interstitial landing pages of knowledgebases.
-	\item Services that return DOIs for queries against knowledgebase are considered Service DOIs (See Section \ref{sec:intro:services}).
-\end{itemize}
-
-
-
-See \ref{sec:landingpage}, \ref{sec:evolving}, \ref{sec:resourcetype}, \ref{sec:authors}, \ref{sec:dates}
-
-The typical Resource type in DataCite is \dataciteterm{Dataset} or \dataciteterm{Service}
-
-\subsection{Issues}
-\label{sec:use:patho}
-
-The primary issue evident in DOI creation today is a mismatch between the metadata created by an archive and the use case (intended to be) implemented by that DOI. Succinctly, the metadata supplied by astronomy archives is often insufficient to ensure the accurate citation of the datasets. 
-
+The primary issue evident in DOI creation today is a mismatch between the metadata created by an archive and the use case (intended to be) implemented by that DOI. Succinctly, the metadata supplied by astronomy archives is often insufficient to ensure the accurate citation of the datasets. \newline
 By detailing these pathologies and triaging their less-than-desirable outcomes we can aim to develop empirically-defined best practices to guide repositories forward with the use of identifiers. Here is a topical list of pathologies:
 
-
 \begin{enumerate}
-	\item Incomplete metadata: missing or incorrectly formatted author data, generic or misstated titles, misunderstood dates.
-	\item Inconsistent metadata: transmutations of metadata between systems lead to inconsistent metadata deposits. Example: transformation from schema.org to Crossref left ESA DOIs in a nasty state;
-	\item (Un)versioned data: versioning is mostly nonexistent and when provided it is ill defined and often opaquely transmitted;
-	\item Misconceptions: DOIs do not lead to data, or what they do lead to is widely varied.
+\item Incomplete metadata: missing or incorrectly formatted author data, generic or misstated titles, misunderstood dates
+\item Inconsistent metadata: transmutations of metadata between systems lead to inconsistent metadata deposits. 
+
+\textbf{Example:} transformation from \href{http://schema.org}{schema.org} into DOI schema.
+\item (Un)versioned data: versioning is mostly nonexistent and when provided it is ill defined and often opaquely transmitted
+\item Misconceptions: DOIs do not lead to data, or what they do lead to is widely varied.
 \end{enumerate}
 
+\subsection{Resources treated in the document}\hypertarget{resources-treated-in-the-document}{}\label{sec:resources-treated-in-the-document}
 
+We observe different uses for DOIs in astronomy-related archives. Identifiers are being assigned for individual datasets (at various levels of granularity); for collections of datasets, for services, for knowledge base, etc.
 
-%-------------------------------------------------------------------------------------------
-\section{Best Practices for DOI Workﬂows}
+\subsubsection{Datasets}\hypertarget{datasets}{}\label{sec:datasets}
 
+Dataset DOIs are the most common usage in astronomy-related repositories, and represent the most important part of all such DOIs. 
+A dataset DOI is used for various resources that can be static, evolving and even multiple.
 
-\subsection{Pre-requisite}
-Ten Registration agencies are providing DOIs, Crossref\footnote{https://www.crossref.org/} usually used for articles and DataCite\footnote{https://datacite.org/} for data are the best known. We strongly recommend the use of DataCite which offers the most appropriate metadata for recording data.\\
+\paragraph{DataSet for individual Resource}\label{sec:dataset-for-individual-resource}
 
-To create a DOI (DataCite), you must be a member of DataCite. Data publishers who are not members must contact a member organisation (in general, countries and universities have a contact point).
+Individual resources are being assigned DOIs at various levels of granularity. At the most granular level, every observation in the Chandra Data Archive (\href{https://cxc.harvard.edu/cda/}{CDA}) is assigned an individual DOI. Similarly, the European Space Agency assigned DOIs to every individual Herschel, ISO, Planck and XMM-Newton observation. In a wider granularity, the  European Space Agency (\href{https://www.esa.int/}{ESA}) assigns  a DOI per data release.
 
+\paragraph{Dataset for multiple resources}\label{sec:dataset-for-multiple-resources}
 
+A DOI on multiple resources gathers together resources under the same entity. For instance a VizieR catalogue \citep{vizier} possibly includes a collection of tables, spectra and images all attached to the same published article.
 
-\subsubsection{Providing metadata using the appropriate schema}
-\label{sec:bestpractice:providing}
-DOI workflow requires metadata curation based on the DataCite schema\footnote{\url{https://datacite-metadata-schema.readthedocs.io/}} which allows to improve the FAIRness of the datasets. Other workflows exist with their own semantic and metadata serialization. These are multiple, they overlap and are also specific.
+\paragraph{Evolving datasets}\label{sec:evolving-datasets}
 
-For instance, the IVOA framework provides a registry with a high level of interoperability and point directly to the resources, whereas DataCite is specialized in data citation and link a human web page called "landing page".
+Evolving dataset is a particular case of Dataset. They include resources such as logs of Observations which are updated incrementally, and they also include resources, such as a knowledge base or "High-Level Science Products" (HLSP) which have non-static data and can grow over time, accumulating both data revisions and additions. %These datasets are not necessarily versioned and can be subject to reproducibility issues.
 
+\paragraph{Resultsets}\label{sec:resultsets}
 
-\important{
-DOI implies to maintain a sustainable mechanism to provide a URL. 
-This requirement, even if also in usage in the IVOA registry, is mandatory for DOI.
-}
+A Resultset is the result returned by a query. It is the result of a service, a user request and datasets executed at a precise moment, which may be not reproducible if it involves evolving data. Thus, certain services such as the \href{https://vamdc.org/}{VAMDC} or \href{https://www.canfar.net/}{Canfar} provide a Query Store with a DOI (Resultset have not been treated in the scope of this Document).
 
-Datasets distributed in diverse frameworks complement each other and are likely harvested by platforms or search engine such as ADS, EOSC, Google Dataset. 
-These indexing services group together the information relating to the same resource, they merge the metadata which are both redundant and specific to each harvested network. This cross operation process (for instance OpenAire) is often a black box and depends on the indexing service’s strategy. % ask by Edwin
-Note that DOI, as a unique identifier, facilitates the cross operations.
+\subsubsection{Collections}\hypertarget{collections}{}\label{sec:collections}
 
+The DOI collection directs users to a collection of individual data records that are related to each other (e.g. : individual observations from the same survey or archive, etc.). The collection provides access to resources (identified with a DOI or with another identifier) via relation (see  \ref{sec:a-basic-tour-of-relationship-motivating-by-their-usage}) defined in the DataCite schema \citep{https://doi.org/10.14454/mzv1-5b55}
 
+Examples of collection-type DOIs include the DOI services provided by the Mikulski Archive for Space Telescopes (MAST) \citep{2018ApJS..236...20N}, Chandra Data Archive (CDA) \citep{2018EPJWC.18612011R}. There is significant variation in the expected use cases for these Collection DOIs. There are also strong variations in the metadata of Collection-type DOIs.
 
-The list of metadata tends to increase, but the most popular are DataCite schema, Dublin Core\footnote{\url{https://www.dublincore.org/}}, VOResource \footnote{\url{https://ivoa.net/documents/VOResource/}} (the registry of the Virtual Observatory), schema.org \footnote{\url{https://schema.org/}} (extends Dublin Core and is used by Google), DCAT\footnote{\url{https://www.w3.org/TR/vocab-dcat-3/}} (linked catalogues, datasets and services. DCAT is a concurrent of the VO registry), OpenCitation\footnote{\url{https://opencitations.net/}} (a schema of linked citation),  etc.
+Considering use-cases, both MAST and Chandra Collection DOIs collect dataset identifiers within their respective databases. For instance, Chandra Collection DOI is made of DOIs of different types. Its metadata and related identifiers are defined to make a Chandra collection DOI the most versatile and general aggregation that can be obtained using Chandra data ``entities''.
 
-\important{
-All are specific, and we highlight the importance for Data providers to disseminate consistent metadata 
-(for instance list the whole authors in all output).
-}
+%Similarly the metadata of Collection DOIs vary between MAST and CDA examples. Chandra Data Collection DOIs create complete records of individuals using relatedIdentifier tags and predicates. The metadata of MAST Collection DOIs do not provide detailed information on the individual MAST records collated in the collection.
 
-The importance, but also the specifity of the metadata have been discussed in IVOA DCP session (see the presention of H.Enke, Interop 2023, Bologna \footnote{\url{https://wiki.ivoa.net/internal/IVOA/InterOpMay2023RegistryDCP/DOI-AIP-20230510.pdf}}
-). In practice, it is better for implementers to think since the beginning about the different output in order to provide consistent workflow.\\
+In any case, \textbf{Collection for DOI means a collection of resources accessible via sustainable URIs.}
 
-\paragraph{Note} DataCite provides several serialization of the metadata, in particular "schema.org".
+\subsubsection{Service}\hypertarget{service}{}\label{sec:service}
 
-\important{
-Maintain the disseminations workflows togethers
-}
+A service in DOI  designates both a set of services accessible via the web and the whole organizational system, including staff, necessary for its operation.
 
+An example of Service DOI is the VizieR Catalogue service including many access to a database \footnote{\url{https://api.datacite.org/dois/application/vnd.datacite.datacite+xml/10.26093/cds/vizier}} or the Tubingen Oscillator Strengths Service (TOSS) in GAVO \footnote{\url{https://api.datacite.org/dois/application/vnd.datacite.datacite+xml/10.21938/3I01ISNUCODNH1ZJBCVUWA}}
 
-\subsubsection{DOI syntax}
-The DOI architecture includes a URL resolver to link the DOI identifier and the resource for the long term. Only the DOI identifier is fixed, the URL as well as the metadata are maintained by the DOI creator.\\
+\subsubsection{Note about Knowledgebase}\hypertarget{note-about-knowledgebase}{}\label{sec:note-about-knowledgebase}
 
-The DOI syntax is composed with a prefix followed by a suffix.
-The prefix is assigned by DataCite or Crossref and is used for all resources provided by the DOI producer. The suffix is created by the producer to identify the resource.
+A knowledgebase is a collection of material collated from many discrete sources. All of the values contained in a knowledge base have a provenance traced to other resources and have been curated into a single database for reuse. Examples include: \href{https://simbad.cds.unistra.fr/}{Simbad} \citep{2000A&AS..143....9W}, NASA Exoplanet Archive \citep{2013PASP..125..989A} (\href{https://exoplanetarchive.ipac.caltech.edu/}{NEA}), NASA Extragalactic Database (\href{https://ned.ipac.caltech.edu/}{NED}) \citep{1991ASSL..171...89H}.
 
-For instance: 
+Knowledgebase is not a particular entity in the DOIs schemas ; it can be a dataset or a service depending on what has to be described (see \hyperlink{assigning-resource-type}{Assigning resource type}).
 
-\url{https://doi.org/10.3847/1538-4365/aab76a}
+\section{DOI Lifecycle}\hypertarget{doi-lifecycle}{}\label{sec:doi-lifecycle}
+
+DOIs are born, but they never die. This means they need long-term curation and management as well as contingency planning to ensure they are useful for generations to come.
+
+\subsection{The DOI Ecosystem}\hypertarget{the-doi-ecosystem}{}\label{sec:the-doi-ecosystem}
+
+DOIs are supported by a hierarchy of agencies that is intended to insure that any DOI created will continue to resolve to something meaningful no matter what happens to the original creator of the DOI. This system includes:
 
 \begin{itemize}
-	\item the prefix 10.3847 is the prefix attributed by Crossref to the AAS journals 
-	\item the suffix 1538-4365/aab76a defined the article 
+\item{} \textbf{Registration Authorities (RAs)}\newline
+The RAs are the key members of the \href{https://www.doi.org/}{DOI Foundation} - the top-level of DOI support. The RAs allocate prefixes, register DOIs, and provide a schema to govern the metadata they collect for each DOI, which varies from RA to RA. Most RAs serve a specific type or population of DOI user.\newline
+\href{https://identify.bsigroup.com/}{bsi.identify}, for example, deals specifically with DOIs used to track construction products; \href{https://www.eidr.org/}{EIDR} provides DOI services for entertainment media; Japan, China, and Korea all have RAs providing DOI services for their agencies and citizens, etc. There are currently 12 RAs in the DOI Foundation. \href{https://datacite.org/}{DataCite} is one of these RAs, and was the first RA specializing in providing DOIs for data resources. The RAs together ensure that if one RA ceases operation, the DOIs that that RA managed will then be managed by one or more other RAs in the Foundation.
+
+\item{} \textbf{Users - DOI Creators}\newline
+RAs provide (or more often sell) DOI services to \emph{users} - people who want to create DOIs for various reasons. Each RA will organize its users according to its own business model. DataCite does this through memberships and service fees. DataCite has two types of members: Consortia, in which one organization acts as a DOI agent for many smaller organizations (managing billing and often providing software for the DOI pipeline); and Direct Members, who are typically single organizations managing their own DOI billing/pipelines.
+
+\item{} \textbf{Users - DOI Consumers}\newline
+The RAs make the DOIs and their associated data available to the public. Typically the basic metadata is freely available for public reference and use. DataCite, for example, makes all metadata in their database accessible to the world at no charge.
 \end{itemize}
 
-DataCite recommends using an opaque syntax. To remove any significance in a name avoids bad interpretation and is more sustainable. For example, the data center where the data are deposited may change and therefore should not be used in the syntax.
+\subsection{How it Works, In Brief}\hypertarget{how-it-works-in-brief}{}\label{sec:how-it-works-in-brief}
 
-Note also the DOI usage in web pages for which it is recommended to provide clickable links. It is therefore up to the web maintainer whether or not to hide the DOI with appropriate text
+Every DOI consists of a prefix and a suffix. In the DOI "10.26007/97r3-1e19", for example, the prefix is "10.26007" and the suffix is "97r3-1e19". To resolve this DOI you could enter \href{https://doi.org/10.26007/97r3-1e19}{https://doi.org/} into a browser and you would be directed to the \emph{landing page} (see \ref{sec:landing-pages-arent-optional}) for that DOI. Here is a brief summary of what is going on in the background to reach this point:
 
+\begin{itemize}
+\item{} Every RA has a distinct domain of prefixes it can assign to its DOI creators.
+\item{} The RA assigns one or more prefixes to each creator. The same prefix is never given to two different DOI creators, but one creator may have more than one prefix assigned to them that they can use as desired.
+\item{} The DOI creator is responsible for making sure that every suffix assigned to a prefix is unique, so that the combination of \emph{prefix/suffix} is guaranteed to be unique in the world. (The RA will check this before publishing the DOI.)
+\item{} The DOI creator is also responsible for curating the metadata for every DOI they create - in particular making sure there is a \emph{landing page}, which is an absolute requirement for all published (that is, resolvable) DOIs.
+\item{} The DOI metadata is uploaded to the RA's metadata database. Most RAs allow DOI creators to reserve DOIs and upload metadata before the DOI is public. (more details in \hyperlink{draft-dois}{Draft DOI})
+\item{} When a DOI creator wants to publish the DOI, the metadata is checked for minimal completeness by the RA and, if that is satisfied, the RA enables public access to the metadata.
+\item{} DOI consumers can then find the metadata directly in the RA's public database and can resolve the DOI through the \href{https://doi.org}{https://doi.org} URL demonstrated above.
+\item{} Once published, then DOI will \emph{always} be resolvable through \href{http://doi.org}{https://doi.org}. If the object goes away, the landing page must be replaced with a tombstone page (see \hyperlink{tombstones}{Tombstones}) that tells users that the object is no longer available. If the DOI creator goes away, their prefixes can be transferred to another creator. If no other creator will take over curation, the RA will. If that RA goes away, the remaining RAs in the DOI Foundation will take over curation.
+\end{itemize}
 
-%-------------------------------------------------------------------------------------------
-\subsection{Citation requirements}
-\label{sec:citation}
+\subsection{Considering a DOI Solution}\hypertarget{considering-a-doi-solution}{}\label{sec:considering-a-doi-solution}
 
-\important{
-	Semantic forewords.
-	Citation means citation in the reference list of an article. A citation is not a footnote URL, an acknowledgement or any DOI string in the text. It ONLY refers to listing the reference in a reference list of an article.
-}
+Because a DOI is itself a permanent entity that is generally expected to lead to a permanent entity, there are a number of things a potential DOI creator should consider before opting for a DOI solution.
 
-\subsubsection{Generating BibTeX}
-DataCite schema includes the required metadata to generate citation in various formats: BibTeX, APA, etc. The citation quality is generally fixed by journals, ADS or Data publishers. It is possible to make a citation from DOI metadata when these are properly curated (BibTeX generated by ADS is richer than those provided by DataCite). 
-We will describe the mandatory items that cover the known citations and we will complete the metadata with added relevant information.\\
+\subsubsection{DOIs are \emph{forever.}}\hypertarget{dois-are-forever}{}\label{sec:dois-are-forever}
 
-Note: Example of citation provided by DataCite in BibTeX format:
+Once a DOI is published it must always be resolvable. If a resource with a DOI is removed from circulation (a data set is offlined, for example, or a digital document is accidentally destroyed) then the DOI must resolve to a tombstone page. A tombstone page (\hyperlink{tombstones}{Tombstones})indicates clearly that the resource is no longer available, and usually offers contact information or an option for users who are attempting to lay hands on the now-defunct resource. The tombstone page must remain as a legacy for as long as there is a DOI Foundation to resolve it.
 
-\begin{verbatim}
-curl -LH "Accept: application/x-bibtex" https://doi.org/10.5270/esa-1ugzkg7
-\end{verbatim}
+\subsubsection{DOIs are not free.}\hypertarget{dois-are-not-free}{}\label{sec:dois-are-not-free}
 
+There is a nominal cost for creating a new DOI, but a much larger expense is tied up in the effort needed to create and curate the metadata associated with the DOI and its landing page. This might be done through manual editing of individual metadata files, or through coding of automated procedures to pull DOI metadata from an internal database.
 
-\paragraph{Full BibTeX template} : the following example maps BibTeX with DataCite schema (see table \ref{tab:tex}).
+\subsubsection{Minimal metadata isn't (usually) good enough.}\hypertarget{minimal-metadata-isnt-usually-good-enough}{}\label{sec:minimal-metadata-isnt-usually-good-enough}
 
-We use the ADS BibTex type "@dataset". This term is specific to ADS and is not used by service such as DataCite which uses the generic term "@misc". % moved+change from Edwin ask
+If DOIs are being created to make resources more findable and accessible, minimal metadata is not going to be good enough to check that box. Long, descriptive titles, subject keywords from standard vocabularies, abstracts containing significant and distinctive details, ORCIDs, ROR IDs, and in particular linking to the DOIs of related resources are all essential to improving findability. Explicit digital licensing is essential for accessibility, which also benefits from MIME types, file sizes, and similar descriptive metadata.
 
-\begin{lstlisting}
-	@dataset{{localref},
-		author = {authors},
-		title = "{title}",
-		year = {year},
-		month = {month},
-		eid = {usualName},
-		url = {url},
-		keywords = {keywords},
-		publisher = {publisherName},
-		copyright = {rights},
-		DOI = {DOI}
-	}
-\end{lstlisting}
+\subsubsection{Landing pages aren't optional.}\hypertarget{landing-pages-arent-optional}{}\label{sec:landing-pages-arent-optional}
 
-%Note that BibTeX standard doesn't provide a specific term for dataset. 
-%"@dataset" is an add-on proposed in this note which is more precise than "@misc".\\ % moved
+Metadata and landing pages are connected in the sense that the registered metadata in the very least should not contradict what is displayed on the landing page.
 
-\begin{table}[th]
-	\begin{tabular}{lll}
-		\sptablerule
-		\textbf{BibTeX} & \textbf{DataCite} & \textbf{Relevance for citation} \\
-		\sptablerule
-		\sptablerule
-	authors & Authors & MUST, see \ref{sec:authors} \\
-	title & Title & MUST, see \ref{sec:title}\\
-	year &  Date:creation & MUST, see \ref{sec:dates} \\
-	month & Date: creation & \\
-	eid & alternateIdentifier & MAY, see \ref{sec:linkeddata}\\
-	url & & SHOULD, use \url{https://doi.org/{DOI}} \\
-	keywords & Sujects & SHOULD, Please, see \ref{sec:keywords} \\
-	publisher & Publisher & MUST \\
-    copyright & Rights & RECOMMENDED, see \ref{sec:licenses} \\
-    DOI & & MUST \\
-    resource\_type  & resourceType & MUST, see \ref{sec:resourcetype}\\
-    \sptablerule
-	\end{tabular}%
-\caption{\label{tab:tex}linking BibTeX and DataCite schema}
-\end{table}
+The DOI creator is generally expected to host the landing page or tombstone page for as long as the creator is curating any DOIs with the same prefix. Landing pages also typically require more curation than the DOI metadata itself, particularly if the hosting organization is interested in making sure the pages are scraped for inclusion in databases like Google Scholar, or can be used to track downloads and citation.
 
-Citation in APA style:
-\begin{verbatim}
-{authors} ({year}). {title} [resource_type]. {publisher}. {DOI}
-\end{verbatim}
+\subsubsection{When object permanence matters, objects must be permanent.}\hypertarget{when-object-permanence-matters-objects-must-be-permanent}{}\label{sec:when-object-permanence-matters-objects-must-be-permanent}
 
-VizieR example: (catalogue J/MNRAS/320/451)
-\begin{verbatim}
-Beers, T. C., Rossi, S., O'Donoghue, D., Kilkenny, D., Stobie, R. S.,
-Koen, C., & Wilhelm, R. (2006). A-G star metallicity [Data set]. 
-Centre de Donnees Strasbourg (CDS). https://doi.org/10.26093/CDS/VIZIER.73200451
-\end{verbatim}
+If DOIs are being created for resources that are considered part of the research literature and are intended to be used for citation to establish provenance and to support reproducibility, then it is essential that the DOIs resolve to the \emph{same thing} every time. For example, if a data set is used as the basis of an analysis and is cited by DOI, then that DOI should always return the version of the data used in the analysis - not a later revision that might give a different result.
 
-\subsubsection{Evolving datasets}
-\todo{PLEASE REVIEW!}
+\emph{Note that the advice above is strictly limited to the case of DOIs that must support reproducibility. There are other reasons for creating DOIs that do not assume or require permanence (more detail in \hyperlink{updated-resources}{Updated resource})}
 
-See DataCite evolving dataset guidance\footnote{\url{https://datacite-metadata-schema.readthedocs.io/en/4.6/guidance/dynamic-datasets/}}\\
+\subsubsection{Assigning a DOI implies "ownership".}\hypertarget{assigning-a-doi-implies-ownership}{}\label{sec:assigning-a-doi-implies-ownership}
 
-\textbf{\color{red}TODO: recall the difference between knowledgebase and Evolving}
+If the potential DOI creator has no control over the resource to which the DOI will be assigned, the DOI should not be assigned. If, for example, a DOI creator has no control over what URL a resource might be moved to, then the DOI creator cannot maintain the linkage between the landing page and the data. The DOI may suddenly be unable to resolve to a landing page that can lead a user to the resource.
 
-We consider different citation for evolving datasets. The method depends on the Data Center implementation.
+\subsection{Getting Into the DOI Business}\hypertarget{getting-into-the-doi-business}{}\label{sec:getting-into-the-doi-business}
+
+If DOIs are the right solution, the following preparations are highly recommended prior to committing to a specific DOI solution:
+
+\textbf{Identify a DOI Service Provider.} This might involve becoming a direct member of an RA, joining a consortium, or working through an existing office in a parent organization. If any part of the larger organization is already issuing DOIs, that office can likely point the way to their service provider. Direct membership in an RA might be preferable if the number of DOIs to be produced annually is large (several thousand or more), or the current provider does not provide a metadata schema with attributes appropriate to the resources to be tagged with DOIs (see the following). Cost may well be a significant factor in this decision, as might the desire/preference for either API or form-based access (or both) to DOI services.
+
+\textbf{Map the available local metadata to the RA schema.} DOI creators must supply metadata according to the schema used by the RA that will be registering the DOIs. Each RA provides its own schema. The DOI creator should make sure that the metadata in hand can be mapped to the RA schema, and that the RA schema contains sufficient attributes to support the reason(s) for assigning DOIs.
+
+\textbf{Draft the landing page design.} Landing pages should minimally be able to take the user to the data in one or two clicks. Landing pages can also be designed to increase Search Engine Optimization, entice sites like Google Scholar to create listings, encourage citations, and help in tracking download metrics. Landing pages will need to be designed to meet the organizational goals, and then be hosted, maintained, and curated in a publicly accessible place. Specifically, the landing page cannot be behind a paywall or login. The data resource might be, but the landing page must be visible to all.\newline
+More details about how to create a landing page are given in Appendix.
+
+\textbf{Define DOI policies and strategies.} The bulk of this document is intended to assist in this effort. It is important, however, to think through and plan out how to manage DOIs as an institutional asset, as well as how to deal with the circumstances expected to arise. These include things like:
+
+\begin{itemize}
+\item{} Offlining old data
+\item{} Rapid drafting of DOIs to meet publication deadlines
+\item{} Transferring a DOI prefix (and its DOIs) to or from another organization
+\item{} DOIs for service portals
+\item{} DOIs for data that aren't static
+\item{} etc.
+\end{itemize}
+
+\textbf{Consider curation.} Depending on what an organization wants to achieve with DOIs, curation may involve: very little - fixing a typo here and there as it is noted, for example; a lot - tracking citations, enriching metadata as schemas evolve, and such; or the occasional crisis - having to change every URL because of a system failure. It is important to make sure that the effort available for routine curation, in particular, matches both the organizational goals for assigning DOIs to the resources and the available workforce.
+
+\subsection{Minting a DOI}\hypertarget{minting-a-doi}{}\label{sec:minting-a-doi}
+
+The process of creating a new DOI, often called "minting", is conceptually very simple:
 
 \begin{enumerate}
-  \item Cite a snapshot of the Dataset. In this approach, the Data Center makes snapshots and adopts a DOI versioning mechanism (see \ref{sec:version}).
-  \item  Cite the dataset as to be an evolving Dataset.
-         Example in APA style:
-\begin{verbatim}
-{authors} ({year}). {title} [evolving Data set]. {publisher}.
-{DOI}. Accessed {date_of_access}
-\end{verbatim}
-
-		In the example {date\_of\_access} could be the 'update' date of the DOI record (assuming that the dataset and its DOI are well synchronized).
-
-	\item Cite a DataSet extraction resulting of a query.\\ 
-	The solution may become complex if we take or not the reproducibility aspect.
-	A simple solution without reproducibility constraint consists to cite the access protocol (for example IVOA SCS, TAP), optionally completed with query details.
-
-	Example in APA style: (note that "protocol" is independent of the DOI record!
-\begin{verbatim}
-{authors} ({year}). {title} [evolving Data set]. {publisher}. 
-{DOI}. Accesses {date_of_access}, via {protocol}	
-\end{verbatim}
-
-\todo{May be add a reference to the RDA term "Dynamic" ?}
-
-	An option taking into account the reproducibility has been adopted by the VAMDC Query Store\footnote{\url{https://cite.vamdc.eu/}} where query and result are hosted with a DOI (giving details are not in the scope of this note).
+\item{} Collect and format the metadata
+\item{} Create a landing page
+\item{} Formulate a unique DOI
+\item{} Submit the DOI, the landing page URL, and metadata to the RA for publishing
 \end{enumerate}
 
-\paragraph{Note} see also the acknowledgment proposed in DataOrigin\footnote{\url{https://www.ivoa.net/documents/DataOrigin/}} Appendix Citation, Template.
+In actual practice, of course, there are many roads leading to Rome. The following sections elaborate on the various methods for accomplishing each step.
 
-\subsubsection{Collections}
-\todo{PLEASE REVIEW!}
+\subsubsection{Step 1: Collect and format the metadata}\hypertarget{step-1-collect-and-format-the-metadata}{}\label{sec:step-1-collect-and-format-the-metadata}
 
-Collections improve discoverability thanks to relationships linking individual resources and allow global metadata factoring. However, the usage of Collection for citation is ambiguous.
+This can range from an entirely manual activity to an entirely automated one. The manual effort to gather metadata can be significant, especially for heterogeneous repositories.
 
-Practice shows that the quality required to extract a good citation is often not obtained from the DOI of Collections. This lack of information is often due to the concept which is of a different nature.
+RA, such as DataCite or CrossRef, fixed Metadata schema, formats, and DOI submission modalities. The RA generally provides a form-based interface and APIs covering the registering protocols and metadata formats (such as JSON or XML).Metadata schema, formats, and DOI submission modalities are fixed by the RA. The RA generally provides a form-based interface and APIs covering the registering protocols and metadata formats (such as JSON or XML)
 
-There are different views that depend on the Data Center strategy but which could be ambiguous for article editions.
-We report two usages, without wanting to endorse either. 
+For DOI creators minting small numbers of DOIs (a few dozen per year, say), the RA may provide a form-based interface for creating DOIs that guides the user through the most commonly used metadata attributes. DataCite, for example, has its \href{https://doi.datacite.org/}{Fabrica} interface for interactive DOI creation. (It can also be used to edit existing DOI metadata, one record at a time.)
 
+Some RAs also provide APIs for creating, drafting,  publishing, and updating DOI metadata. DOI creators can code their own custom DOI minting interfaces using these APIs. Note that these APIs will require credentials to make any change to the metadata in the RA database, which may not be available if DOI service is being provided by an intermediary organization.
+
+Sometimes, RA provides a test and production environment. In DataCite, the ``\href{https://doi.test.datacite.org/}{test Fabrica}'' is a production clone that emulates the DOI generation. It is common for DataCenter who develops a DOI workflow.
+
+\subsubsection{Step 2: Create a landing page}\hypertarget{step-2-create-a-landing-page}{}\label{sec:step-2-create-a-landing-page}
+
+The landing page must exist and be publicly accessible (i.e., not behind a paywall or login) before the RA will publish the DOI.
+
+The landing page itself can change, of course, and the DOI curator will always have permission to update the DOI metadata to change the URL if needed. If the resource is behind a paywall or login, the landing page should provide that notice as well as information about how to get permission to access the resource.
+
+The document gives a good practice for landing page creation  in the \hyperlink{appendix}{appendix}. Note, that the landing page can evolve during all its life cycle. For instance a pre-publication landing page is modified when  the resource is published and it may evolve again for a deaccessioned resource (see tombstone page at the end of this section).
+
+Note: Metadata and landing pages are connected in the sense that the registered metadata in the very least should not contradict what is displayed on the landing page.
+
+\subsubsection{Step 3: Formulate a unique DOI}\hypertarget{step-3-formulate-a-unique-doi}{}\label{sec:step-3-formulate-a-unique-doi}
+
+The DOI creator will be assigned one or more prefixes by the RA that will be unique to that creator. The DOI creator has a lot of freedom when it comes to creating suffixes to append to that prefix. The DOI Foundation allows "any printable characters from the legal graphic characters of Unicode", although it does stipulate that the string must be interpreted case-insensitively. So it is technically all right for the prefix '/' to be followed by numbers, letters, punctuation - including the slash ('/') character - and any other printable Unicode character. In practice, however, it is generally wise to avoid characters that will make life miserable for those who need to deal with DOI strings in forms, text, URLs, and APIs.
+
+From an information science perspective, it is generally considered a good practice \emph{not} to try to encode meaning into things like DOI suffixes, but sometimes a unique internal identifier is a very convenient way to ensure a unique DOI. There are utilities available to generate hashes that can be used when a unique identifier is required and not otherwise handy. DataCite, for example, will auto-generate a suffix that has a number of useful characteristics - like avoiding the letters i, l,  and O that are so often confused with 1 and 0.\\
+
+See also the DataCite blog \href{https://datacite.org/blog/cool-dois/}{Cool DOI}.
+
+\paragraph{Example:} \url{https://doi.org/10.3847/1538-4365/aab76a}
 \begin{itemize}
-	\item Collection is not intended to be cited in articles.
-The role of Collection (potentially having poor metadata) seems to be essentially to establish relation (with the advantage of the flexibility of the URL resolution that the DOI offers).
-This approach is chosen by MAST
-
-
-	\item The preferred citation is the Collection.
-Collections are intended to collect and distribute credit to and collection of entities they contain.
-Sometimes, individual entities have poor metadata in favor of global metadata (in Collections). In this architecture, because heritage is not trivial for harvesting, it results that individual resources have no metadata allowing citation.
-This approach is chosen by Chandra
+\item{} the prefix 10.3847 is the prefix attributed by Crossref to the AAS journals
+\item{} the suffix 1538-4365/aab76a defined the article
 \end{itemize}
 
-\subsubsection{Service}
-We encourage Data publishers to provide a way to cite or acknowledge services used by authors in articles. The recommendation is in the Publisher discretion and should be visible in the landing page of the Service (see \ref{sec:landingpage}).\\
-
-It is rather a common practice to acknowledge than cite a service in an article. For both, the Service DOI which includes the URL resolver has to be considered.
-
-\subsection{Landing pages}
-\label{sec:landingpage}
-
-\subsubsection{Building a landing-page}
-Landing page is a human readable WEB page attached to the DOI. Datacite provides a documentation about good usage
- \footnote{\url{https://support.datacite.org/docs/landing-pages}}.
-
-\important{
-	The landing page is primarily dedicated for Human. 
-	The DOI metadata should be visible in the web page. In particular, 
-	the DOI, title, authors, licenses should be highlighted.
-}
+\important{Once created, the DOI is fixed. It is a persistent identifier dedicated to a single resource and can't be reused for another resource.}
 
 
-Additional information is often added. In particular links to access the data, but also any other information, specific to the data center or included in other workflows provided by the Data Center (BibTeX, schema.org \footnote{\url{https://schema.org/}}, DCAT \footnote{\url{https://www.w3.org/TR/vocab-dcat-3/}}, etc)
+\subsubsection{Step 4: Submit the DOI, the landing page URL, and metadata to the RA for publishing}\hypertarget{step-4-submit-the-doi-the-landing-page-url-and-metadata-to-the-ra-for-publishing}{}\label{sec:step-4-submit-the-doi-the-landing-page-url-and-metadata-to-the-ra-for-publishing}
 
-\paragraph{Landing page for service of Knowledgebase}
-The landing page of a service or a Knowledgebase is generally its web portal. It includes both service access and information (eg: contact, about, etc.)
+Once the landing page is live and the metadata are complete (and validated, if possible), the information can all be uploaded to the RA with instructions to publish the DOI. Typically, the DOI will be available to the public from the RA's metadata database within minutes. It may take anything up to a day to propagate to the \href{https://doi.org}{https://doi.org} service, depending on load and maintenance schedules.
 
-\paragraph{Landing page for collection}
-This page contains information that is common to every datasets in the collection. Each Dataset specificity is not shown on this page. The content depends on the nature of the collection: for instance the Organization, an abstract, the date of creation or the materials used to generate the individual datasets.
+The RA intake systems are smart enough not to overwrite an existing DOI by an attempt to create a new DOI with a DOI string that is already in use. As expected, they will also refuse to create a DOI without authenticating credentials, or create a DOI with a prefix that is not assigned to the credentials used.
 
-The page should provide the way to access individual datasets.
+Once published, the DOI cannot be removed, even if it was created in error. In the event of error, the metadata should be nulled out and the URL directed to a landing page that explains that the DOI was created in error and corresponds to no resource.
 
-\subsubsection{Generate a machine-readable landing page}
-Search engines harvest landing page for indexation and expect some metadata serialized with a standard semantic. For instance "schema.org" or DCAT serialized in JSON-LD are needed by Google Datasets \footnote{\url{https://datasetsearch.research.google.com/}}.\\
+\subsection{Updated resources}\hypertarget{updated-resources}{}\label{sec:updated-resources}
 
+The  resources subjected to updates require the DOI creator to adopt a management plan. The plan depends both on the nature of the updates and the nature of the resource.\newline
+In this section, we treat different use cases:
 
-The FAIRness of the landing page can be evaluated with validators:
 \begin{itemize}
-    \item FAIRchecker \footnote{\url{https://fair-checker.france-bioinformatique.fr/}}
-    \item Google Search central \footnote{\url{https://developers.google.com/search/docs/appearance/structured-data}}
+\item{} Evolving datasets (see the definition and examples in section \hyperlink{evolving-datasets}{Evolving datasets})
+\item{} Corrections on datasets contents
+\item{} Versioning dataset: for instance a version per data release (eg: SDSS DR1, ...)
 \end{itemize}
 
+Foremost, it is important to distinguish dataset versioning which is managed by the DOI creator, and metadata versioning which is operated by the RA for each metadata update. In this section we will talk only on dataset versioning.\\
 
-\subsubsection{Pathologies}
+DataCite recommends "\textbf{Register a new identifier for a major version change"}. 
 
-
-\begin{itemize}
-	\item https://doi.org/10.17189/1519607 (NASA/PDS): there is a title, authors, DOI, summary... but there is no direct link to the data. The "Search/Access Data" link goes to a search interface, where the user should search again with some parameter (not specified, to be guessed)
-	\item https://doi.org/10.48322/rgf7-3h67 (HPDE): there is everything about the citation, title, doi, summary, content... but the formatting is very close to the SPASE XML record. It’s ok for user fluent with SPASE, not so much for outsiders. The SPASE record lists a number of related identifiers, not present in the DataCite metadata.
-	\item https://doi.org/10.57780/esa-3xcjd4w (ESA): All required/recommended information is present, but the granularity (a single DOI for the full experience, not split with version ro processing levels...). And the data access goes to a search interface, where the user should search again for the products.
-	\item https://doi.org/10.3334/ornldaac/2351. Besides having semantic information in the DOI, the biggest problem is the fact that metadata says that this is a collection DOI. However, the metadata is for a dataset that is in the collection. The collection itself is specified in the relatedIdentifiers section with attribute IsPartOf, but the collection itself does not have a DOI.
-\end{itemize}
-
-
-\subsection{Linked Data}
-\label{sec:linkeddata}
-
-
-\subsubsection{Connect resources together}
-Linked Data allows to connect resources together, it helps discovery and allows to generate a map of interconnected resources. 
-Linked Data are expressed with \dataciteterm{RelatedIdentifier} in DataCite schema. They have been the subject of a supplementary section in the DataCite guidance.\\
-
-We recommend to add at least one relation (for instance to link a dataset with a reference article).\\
-
-DataCite provides a list of controlled vocabulary that allows to specify the relationship between resources. 
-These relations may use DOI or any other sustainable identifier (eg: bibcode).
-
-
-\important{	
-The relationship vocabulary is precise. 
-Too often, providers give their own interpretation of the terms. 
-If there’s any doubt about the meaning of the vocabulary, 
-it’s better to put no relations than a misunderstood relationship.
-}
-
-See relation vocabulary and their definitions in the DataCite Schema\footnote{\url{https://datacite-metadata-schema.readthedocs.io/_/downloads/en/4.5/pdf/}, section 12}.
-
-
-%\begin{bigdescription}
-%	\item \color{ivoacolor}\textbf{Note}
-\important{Privilege DOI linking to any relations}
-%\end{bigdescription}
-
-DOI has to be privileged than any other identifier or URI. DOI facilitates the harvesting/merging jobs. For instance the EOSC EU Node portal displays related resources having DOI.
-
-
-
-\subsubsection{Link resources within a DataCenter}
-DataCenter may provide resources in different granularity. For instance Chandra provides catalogues of observations. Each observation is a Product having his own DOI. 
-Then the products are linked to the catalogue which has a DOI too.
-
-\paragraph{Particular interest for Collections}
-In the case of Collection, DataCite provides terms to link a resource to its collection.
-\dataciteterm{isPartOf} seems to be appropriate to link an individual Dataset to a Collection. The \dataciteterm{relatedIdentifiers} picked to express the relationship between elements of a collection and the collection are defined by the relationship in the hierarchy of the data holdings.
-
-Include related identifiers linking the collection DOI to internal and if possible external identifiers for the dataset(s). 
-This will make the DOIs broadly more useful and interoperable.
-
-
-\subsubsection{Link data to external resources}
-There are many reasons to link a resource with external products, we give just few examples:
+It is out of the scope of this document to give a definition of what is a major change. However, we give 4 concretes examples:
 
 \begin{itemize}
-	\item link the datasets that have been used to create a product 
-	\item link other copy 
-	\item for a derived product, link the original data
-	\item cite a resource
-	\item etc.
-\end{itemize}
+\item{} A log of observation is a dataset updated regularly (may be daily). In that case, the Data Center doesn't update the metadata (not even the update dates) because it is the nature of the resource to evolve.
 
-DataCite schema allows to qualify the relation. Although these qualifications are precise and must not be subjected to bad interpretation. We list a short list of terms often used for this purpose (Note that DataCite relationships have no scope restriction, they can be applied to link external or internal archives.)
+\textbf{Example:} VizieR Occultation lights curves  \newline \url{https://doi.org/10.26093/cds/vizier.102033}
 
-\begin{itemize}
-	\item \dataciteterm{isIdenticalTo} (exact copy), 
-	\item \dataciteterm{isVariantFormOf}, \dataciteterm{isDerivedFrom}
-	\item \dataciteterm{Cite}
-	\item etc.	
+\item{} Fixing typo in a dataset (for instance a column containing authors names) could be managed as a minor correction. It doesn't need a new DOI (ie no versioning), but it is recommended to update the  \dataciteterm{dateType} "updated" attributes and possibly update the version number (\datacitetag{version}{version})
+
+\item{} Any correction that impacts the scientific result should be subject to  versioning (see \hyperlink{versioning}{Versioning})
+
+\item{} A new data release must  be subject to versioning
+
+\textbf{Example} ESA GAIA release DR3: \url{https://doi.org/10.5270/esa-qa4lep3}\newline
+ESA GAIA release DR2:
+\url{https://doi.org/10.5270/esa-ycsawu7}
 \end{itemize}
 
 
-\paragraph{Linking Dataset to a publication}
-DataCites provides terms to link Datasets with articles. For instance \dataciteterm{Cites}, \dataciteterm{isSupplementTo}, \dataciteterm{isDescriebdedBy}, \dataciteterm{References}, etc.
-Choosing the good term is specific to the Datasets. \\
+\subsubsection{Versioning}\hypertarget{versioning}{}\label{sec:versioning}
 
-
-Note the \dataciteterm{Cites} relations which makes an automated citation (the article is cited when the DOI of the dataset is created). 
-Other terms like \dataciteterm{References} generates statistics in DataCite too.
-
-
-Citation between Articles and dataset is possible in either direction (term \dataciteterm{Cites} or \dataciteterm{isCitedBy}). The choice of citation depends on the workflow. Sometimes the article may cite a dataset that has been published previously. At other times, the dataset is published in conjunction with the article or has been reproduced in its identical form or with added value at a later date. It should be noted, however, that the notion of \dataciteterm{isCitedBy} requires a workflow synchronization that is not always easy to implement.
-
-%\paragraph{Query DataCite statistics}, see "referenceCount", "citationCount"
-%\begin{verbatim}
-%curl "https://api.datacite.org/dois/{DOI}"	
-%\end{verbatim}
-
-%\paragraph{Query Crossref statistics}
-%\begin{verbatim}
-%curl "https://doi.crossref.org/search/doi?doi={DOI}&format=info&pid=mail@address	
-%\end{verbatim}
-
-
-\paragraph{Example:} link a dataset with its reference article.\\
-The above example provides a relations using bibcode \\
-(extract from \url{https://doi.org/10.26093/cds/vizier.22640008}).
-
-\begin{lstlisting}%[language=json]
-	
-"relatedIdentifiers": [
-  {
-    "relationType": "IsSupplementTo",
-    "relatedIdentifier": "2023ApJS..264....8H",
-    "relatedIdentifierType": "bibcode"
-  }
-]
-\end{lstlisting}
-
-\paragraph{Linking Dataset with its original resource}
-We distinguish a mirror copy and a resource derived from an original resource. 
-Both can have their own DOI. We encourage derived resources as well as copy mirrors to link the original resource using DataCite relations. 
-
-There are lots of reasons why a DataCenter that provides a derived resource wants to provide a DOI.
-Often, the derived product is the result of a curation that provides added values.
-
-Before creating a DOI, we encourage the DataCenter to tell their DOI plan to the original archive. 
-Some metadata of the original resources should be copied in the derived product, and others will be dedicated to the derived product.
-
-\begin{itemize}
-\item Authors: the full authors (creators and contributors) list should be replicated in the derived metadata. The list can be completed with contributors involved in the derived product curation.
-\item Dates: the creation and the modification dates are the dates of the DataCenter that provide the derived product.
-\item Abstract: it is not needed to duplicate the original abstract, but the added curation should be explained.
-\item relations: add a link to the original product. 
-You can Cite (relation type \dataciteterm{Cites}) the original resource that you can complete with a relation explaining the relationship between the original and the derived product.
-\end{itemize}
-
-Please : refer to \dataciteterm{relationType} vocabulary and do not extrapolate the semantic.
-
-
-\paragraph{Example:}
-\begin{lstlisting}%[language=json]
-	
-"relatedIdentifiers": [
-  {
-    "relationType": "IsVariantFormOf",
-    "relatedIdentifier": "10.5270/esa-qa4lep3",
-    "relatedIdentifierType": "DOI"
-  },
-  {
-    "relationType": "Cites",
-    "relatedIdentifier": "10.5270/esa-qa4lep3",
-    "relatedIdentifierType": "DOI"
-  }
-]
-\end{lstlisting}
-
-\subsubsection{Link other networks}
-\label{sec:altidentifier}
-Link an other network (see \ref{sec:bestpractice:providing}) is not a capability provided by DataCite.
-However, networks using a specific identifier can be exploited to link the DOI record.\\
-\dataciteterm{alternateIdentifier} is a term to specify another identifier of the same resource. For instance the Usual Name used by the Data Center or the IVOID of the Virtual Observatory.
-
-\important{When it exists, we suggest to add the IVOID of the resource in DOI using \dataciteterm{alternateIdentifier} and to add the DOI in the VO Registry records using \vorent{altIdentifier}.}
-
-\paragraph{Example of alternatated identifier using IVOID.}
-\begin{lstlisting}%[language=json]
-	
-"identifiers": [
-  {
-	"identifier": "ivo://CDS.VizieR/j/mnras/320/451",
-	"identifierType": "ivoid"
-  }
-]
-\end{lstlisting}
-
-\subsubsection{Linked Data for Services and knowledgebase}
-\label{sec:linkedataServiceKnowledgebase}
-It is again the role of the Data Center to choose relevant links. However, we suggest to limit links with a reference article.\\
-
-For Query tool Service (or web Service) we haven’t found any equivalent in DataCite of the \vorent{servedBy} term of the VO registry to link datasets with services. \\
-
-For Organized System Service, then terms like \dataciteterm{isSourceOf}, \dataciteterm{isCompiledBy} can be envisaged.
-
-
-
-\subsection{Versioning and evolving datasets}
-\label{sec:version}
-
-
-\subsubsection{Manage version}
-Distinguish dataset versioning (the Data Center responsibility) and metadata versioning (automated versioning done by DataCite at each metadata update).
-
-A good practice consists to follow a versioning mechanism for each data update. DataCite (version 4.6) recommends to create a new DOI for each major version and stipulating the version number with \dataciteterm{Version}. 
-
-\todo{Provide example of what a "data update" or "major version ?}
-
-It is recommended to adopt a version number following the pattern:
-\begin{verbatim}
-	major_version.minor_version[.patch_version]
-\end{verbatim}
-
+DataCite (version 4.6) recommends creating a new DOI for each major version and stipulating the version number with \datacitetag{version}{version}. The versioning mechanism in DataCite schema is based on relationships terms \datacitetag{relatedidentifier}{relatedIdentifier}. 
+Versioning allows access to the landing page to each versions. Each version has its own DOI and is linked to the other versions.
 
 Different mechanisms exist:
+
 \begin{itemize}
-\item  Zenodo \footnote{\url{https://zenodo.org/}} method: makes a DOI collection of versions. Each version has its own DOI which is linked (related identifier) with the DOI collection.
-\item Make 1 DOI for version and link the DOI version together using related identifier \dataciteterm{isNewVersionOf}, \dataciteterm{isPreviousVersionOf}
+\item{} Zenodo method: makes a DOI collection of versions. Each version has its own DOI\newline
+Version and collection DOI are linked together using \datacitetag{relatedidentifier}{relatedIdentifier} (HasVersion and isVersionOf)
+\item{} Make 1 DOI for version and link the DOI version together using related identifiers and attributes \dataciteterm{relationType} "isNewVersionOf" and "isPreviousVersionOf".
 \end{itemize}
 
-\subsubsection{Evolving datasets}
-\label{sec:evolving}
-Versioning is well adapted for data subject to planned update, such as survey releases. Versioning implying a DOI per version is preferable for reproducibility.
-However, there are datasets that evolve regularly and for which versioning is inappropriate. For instance logs of observations evolve regularly.
+\paragraph{Examples:}
 
-For those types of datasets, we suggest adding in the DOI \dataciteterm{Title} or in \dataciteterm{Description} the evolving nature of the datasets and to modify the "Update" date at each modification.
-
-We also recommend specifying the evolving nature in the \dataciteterm{ResourceType} (see examples in \ref{sec:resourcetype}).
-
-
-\subsection{Tombstone page}
-\label{sec:tombstone}
-
-In principle, a resource having a DOI should be sustainable (For instance, a DOI in an article links a resource which is relevant for its content).\\
-
-If for any unfortunate reason,  the resource needs to be discontinued, the landing page must be replaced by a "tombstone page". It is the responsibility of the data provider to maintain the URLs of their landing pages through their DOI registration agencies. \\
-
-The tombstone page must include the following pieces of information: 
 \begin{itemize}
-	\item DOI, title, creators, citation (as for a regular landing page) 
-	\item Clear statement that the resource is discontinued 
-	\item Reason for the removal of the resource
-	\item Link to a new version or other replacing resources  (if applicable)
+\item{} \href{https://doi.org/10.5281/zenodo.5768656}{Data for Figures in Unexpected Long-Term Variability in Jupiter's Tropospheric Temperatures}\newline
+  Zenodo creates a DOI which contains all version (\url{https://doi.org/10.5281/zenodo.5768656})\newline
+  
+  \begin{lstlisting}[basicstyle=\footnotesize\ttfamily]
+  "relatedIdentifiers": [
+  	{
+  		"relationType": "HasVersion",
+  		"relatedIdentifier": "10.5281/zenodo.5768657",
+  		"relatedIdentifierType": "DOI"
+  	},
+  	{
+  		"relationType": "HasVersion",
+  		"relatedIdentifier": "10.5281/zenodo.7336240",
+  		"relatedIdentifierType": "DOI"
+  	},
+  	{
+  		"relationType": "HasVersion",
+  		"relatedIdentifier": "10.5281/zenodo.7583188",
+  		"relatedIdentifierType": "DOI"
+  	}
+  	]
+  \end{lstlisting}
+
+Each of this versioned DOI use a relation \dataciteterm{relationType} "IsVersionOf" to the main collection. \newline
+Ex: \url{https://api.datacite.org/dois/10.5281/zenodo.7336240}
+
+
+\item{} Example of Dataset, published by ASTROMAT using \dataciteterm{relationType} "isNewVersionOf"\newline \url{https://doi.org/10.26022/IEDA/1129401129}
 \end{itemize}
 
+\paragraph{Semantic versioning.} %There are recommendations for managing version numbers.
+Version includes usually different levels. The first level refers to major releases, the second level to minor releases, and a third level is added for patches (corrections, etc.). For example, "semantic versioning" \citep{preston-werner_semantic_2023} focuses on software. Others, such as "Calendar versioning" \citep{hashemi_calendar_2016}, suggest adding a date to the version as a reference point.
 
-%-------------------------------------------------------------------------------------------
-\section{Metadata list}
-We focused on a sub list of terms needing a special attention in curation.
+\subsubsection{Evolving Datasets}\hypertarget{evolving-datasets}{}\label{evolving-datasets}
 
-\subsection{Choosing a resource type}\label{sec:resourcetype}
+Versioning is well adapted for data subject to planned update, such as survey releases. Versioning implying a DOI per version is preferable for reproducibility, However, there are datasets that evolve regularly and for which versioning is inappropriate. For instance logs of observations evolve regularly.
 
-The Resource type is specified with  \dataciteterm{ResourceTypeGeneral} which uses a controlled vocabulary, completed with a \dataciteterm{ResourceType} which is a free text.\\
+There is no dedicated "evolving" metadata in DataCite yet. The recommendation given below remains informative for the end users.\newline
+For those types of datasets, we suggest adding in the DOI \datacitetag{title}{Title} or in \datacitetag{description}{Description} the evolving nature of the datasets and, when applicable, to update the \dataciteterm{dateType} "updated" attribute. We also recommend specifying the evolving nature in the \datacitetag{resourcetype}{ResourceType} which is a free text. However, these recommendations are just descriptive, they are not used for instance in citation generation tools such as those offered by DataCite. They remain informative and can be used for a home-made citation creation.
 
-Examples: Choosing the good Resource type leads to the Data publisher. 
-The following list is indicative only and does not constitute a rule of good practice:
+\paragraph{Example:} VizieR Occultation lights curves  \newline \url{https://doi.org/10.26093/cds/vizier.102033}
 
+\subsection{Nuances and Gory Details}\hypertarget{nuances-and-gory-details}{}\label{sec:nuances-and-gory-details}
 
-\begin{table}[th]
-\begin{tabular}{lclcr}
-	\sptablerule
-	 & \textbf{ResourceTypeGeneral} & \textbf{ResourceType}  \\
-	\sptablerule
-table         & Dataset             & Dataset          \\
-spectrum      & Dataset             & Spectrum         \\
-image         & Image               & Image            \\
-logs of observations & Dataset      & Evolving Dataset \\
-Collection    & Collection          & Data files, Documents... \\
-Service VO    & Service             & IVOA Service     \\
-Service Web   & Service             & Web Service      \\
-Service/Project & Service or Project & \\
-knowledgebase & Dataset             & Evolving Dataset \\  
-\end{tabular}%
-\caption{\label{tab:resourcetype}}
-\end{table}
+Following are additional details and items of note for DOI creators and curators.
 
-Example:
+\subsubsection{Draft DOIs}\hypertarget{draft-dois}{}\label{sec:draft-dois}
+
+Because publishing a DOI is an irrevocable act, most RAs make it possible to reserve a DOI in a non-public state, typically called "Draft" or "Reserved", so that the metadata can be created, examined, and tested before going public. A DOI in a draft state can be deleted entirely, but as long as it exists in the RA's database the DOI string is protected from being duplicated. Publishing a draft DOI typically only involves changing a flag in the RA database.
+
+Draft metadata is not visible to users other than the DOI creator (identified by credentials) who created the draft.
+
+Draft DOIs can be used to eliminate race conditions with data citations. A draft DOI can be supplied for citation of the data in a paper in preparation, as long as the journal editor is confident that the DOI will be live by publication of the paper. In the event of a very skeptical journal editor or a very careful referee, a draft DOI can be published with a pointer to a landing page explaining that the data are, for example, in hand and undergoing review, and that those wishing to see the data before it is released can contact some named party for access. Once the data are published, the already-published DOI and landing page can be updated accordingly.
+
+Some repositories provide draft DOIs as a matter of course to facilitate timely publication.
+
+A good example of a repository providing DOI registration before publication is the \href{https://nadc.china-vo.org/res/paperdata/}{China-VO Paper Data}. Frameworks such as \href{https://inveniosoftware.org/}{Invenio},  \href{https://dataverse.org/}{Dataverse} or the \href{https://www.osti.gov/}{U.S. Department of Energy Office of Scientific and  Technical Information (OSTI)} also provide this possibility.
+
+\subsubsection{Prefixes}\hypertarget{prefixes}{}\label{sec:prefixes}
+
+Prefixes are assigned by the RAs to specific DOI creators. Typically, a creator can have as many prefixes as they need.
+
+There are two reasons why a DOI creator might want more than one prefix:
+
+\begin{enumerate}
+\item{} \textbf{Accounting.} Separate prefixes make it possible to allocate costs to specific DOI applications, and also make it easier to generate statistics by prefix for DOIs that have been created.
+\item{} \textbf{Planning.} It is generally pretty easy to transfer all the DOIs associated with a single prefix to a new curator. It is all but impossible to transfer a subset of DOIs from a single prefix to a new curator. If it is possible that a set of DOIs might need to be passed off to another curator, it is wise to plan for that by giving them a unique prefix.
+\end{enumerate}
+
+As a practical example, the Planetary Data System Small Bodies Node (\href{https://pds-smallbodies.astro.umd.edu/}{SBN}) is a Direct Member of DataCite. The SBN has three parts: The Asteroid Subnode in Arizona; the Comet Subnode in Maryland; and the Minor Planet Center (MPC) in Massachusetts. Each of these subnodes has its own DOI prefix. The MPC generates thousands of DOIs a year for its publications. It has its own prefix primarily for accounting purposes. The Asteroid and Comet subnodes create a few dozen DOIs each per year. They have their own prefixes primarily for planning, so that if the organization of the node changes during a recompete, the DOIs of one (or - let's hope not - both) of these subnodes can easily be transferred to a new institution.
+
+\subsubsection{Metadata Maintenance}\hypertarget{metadata-maintenance}{}\label{metadata-maintenance}
+
+It is important to note that the only thing that is truly permanent in the DOI metadata is the DOI value itself. Everything else can change. Some of it \emph{shouldn't} change, but it all \emph{can} change. So it is possible, sometimes even advisable, to update a DOI metadata record with a new, more explicit title and abstract when the existing content is deemed too vague or too likely to produce unsatisfying search results. And it is certainly possible to fix any typos, correct mistakes, and upload "missing" metadata as these issues are discovered. This is part of the value of DOIs - the metadata can be actively curated to serve the resource it is describing. The immutable DOI provides the permanent link.
+
+Care should be taken to ensure that the metadata used for citing a resource is complete and correct at the time the DOI is published. Many systems generate citation and reference strings automatically from DOI metadata. Changing an author list or publication date after a citation has been printed, for example, can have a large impact on individuals.
+
+Resources will usually dictate what can be curated after publication. The only thing that absolutely must be curated is the link to the landing page. Moving or reorganizing the site that hosts the landing pages can result in a major effort to update all affected URLs. Not doing so reflects badly on the RA, and thus is usually noted at a high level.
+
+RAs are also concerned about metadata completeness. Incomplete metadata leads to bad search results from the RA metadata databases. This also reflects badly on the RAs, and there is increasing pressure to "do something about it". In general, all applicable fields of the RA metadata schema should be filled wherever possible.
+
+Once these baselines are met, there are other curational chores to perform as resources allow. Some organizations, for example, actively track citations of their products and add the information to their own DOI metadata. Also, many archives are now thinking seriously about "metadata enrichment" - adding metadata to both standardize and improve the quality and success of searching, accessing, and (re)using their data holdings.
+
+%Note that, with respect to metadata updates, the versioning of the metadata itself is typically a detail handled within the RA's database. Explicit version numbers in the metadata schemas usually refer either to the version of the schema in use, or the version of the resource being described.
+
+\subsubsection{Tombstones}\hypertarget{tombstones}{}\label{sec:tombstones}
+
+A tombstone page is used to indicate that the associated DOI does not lead to a resource. This could be for a number of reasons:
+
+\begin{itemize}
+\item{} The resource has been near-lined (moved to cold storage but still available on request).
+\item{} The resource has been off-lined (not available online without special arrangement).
+\item{} The resource has been deleted/purged/lost (not available, period).
+\item{} The resource was never received.
+\item{} The DOI was published in error.
+\end{itemize}
+
+The point of a tombstone page is to prevent a user from wasting time continuing to seek a resource that is no longer available. When a resource is available but requires special procedures for access (like retrieval from deep storage), the tombstone should provide instructions or contact information to make the request. Some tombstones may contain or point to the available metadata, or perhaps some documentation, to help a disappointed user.
+
+Except in the case of a DOI published in error, the DOI metadata related to a tombstone page should be left intact.
+
+In general, tombstones should be rare, but they are an effective way to maintain a link to legacy data cited in the literature once improved versions are available and getting the bulk of the contemporary attention.
+
+\section{Core Metadata}\hypertarget{core-metadata}{}\label{sec:core-metadata}
+
+\subsection{Metadata consistency}\hypertarget{metadata-consistency}{}\label{sec:metadata-consistency}
+
+A DOI describes a published resource resulting from an activity.  \newline
+Sometimes, the final product is the result of activities, often operated by different institutes. For instance a dataset attached to an article has been enriched with added values. A compilation derived from several original resources, etc.\newline
+Each of those activities can be published with a DOI and has its own metadata. For instance, each activity has a publisher -  idem,  the creation and update dates deal with the resource resulting from the activity, they are distinct to the date of the original data.
+
+Compilations product is a well representative use-case of metadata consistency activity. The author of a compiled resource uses original resources, but by cross-referencing them, the author modifies the scope of the new resource and adds its own intellectual touch. In this case, the creator of the data is the author of the compilation and not the authors of the original resources. This use-case could be applied to any derived resource that modified the content. For those, the provenance information and the citation of the original resource is managed by relations (see \ref{sec:linked-data-with-internal-and-external-resources})
+
+\paragraph{What about metadata inheritance?}
+
+Rather than inheritance, it is often the provenance which has to be specified.\newline
+Inheriting metadata from the original product to the derived product can hinder understanding of the product's activity. However, we observe some exceptions:
+
+\begin{itemize}
+\item{} License is a DOI metadata which can be subject to inheritance due to the contaminants property of some licenses.
+\item{} Creators of resources resulting from an activity that doesn't modify the scientific content. \newline
+Authors of the original resource remain the intellectual owners of the (inherited and curated ) resource. Curator(s) responsible for the added value could be added as a contributor (see \hyperlink{creators-and-contributors}{Creators and contributors}). In any case, the relation to the original resource should be assigned (see \ref{sec:linked-data-with-internal-and-external-resources})
+\item{} Resource copied (isCopyOf term) keep the original metadata.
+\end{itemize}
+
+\subsection{Assigning resource type}\hypertarget{assigning-resource-type}{}\label{sec:assigning-resource-type}
+
+DataCite provides two items to manage the resource type. \newline
+The first is \dataciteterm{ResourceTypeGeneral} which is \textbf{mandatory} in the DataCite schema. It consists of a controlled vocabulary that allows the term to be machine-readable. The "ResourceTypeGeneral" is used to make categories. The second is \datacitetag{resourcetype}{ResourceType} and it completes "ResourceTypeGeneral" with free text. "ResourceType" is an option which is not generally used by citation extractors (see \hyperlink{citation-extraction}{Citation extraction}). It remains, however, a common way to accurately determine the resource type.
+
+The choice of the "ResourceType" (see also definition in \hyperlink{resources-treated-in-the-document}{Resources treated in the document}) affects the understanding of the resource. %\newline
+%The choice of ResourceType depends on what has to be described. 
+For instance if you want to publish a DOI for your Knowledge base, you can expose its content (so the database) with the type \dataciteterm{ResourceTypeGeneral} "Dataset", or the Service or organization that maintains it with the type \dataciteterm{ResourceTypeGeneralType} "Service".\newline
+
+\textbf{A DataSet should not be confused with a Collection.} A collection is an entity which doesn't point to the data directly, but gathers resources described elsewhere having each their own PID. The collection provides a list of relations to resources and has metadata that applies to all of these external resources. The Dataset contains one or multiple resources under the same DOI. For instance, an author who publishes a set of Documents made of spectrums under the same DOI is a \dataciteterm{ResourceTypeGeneral} "DataSet".
+
+"ResourceType" is a description of everything that is associated with the DOI, taken as a whole. DataCite provides the term "formats" to describe the files comprising the resource. The term can list multiple specific MIME types for users who want to know whether they will be able to do anything with what they download.
+
+A non exhaustive proposal or ResourceType
+
+\begin{tabular}{|p{0.3\textwidth}|p{0.3\textwidth}|p{0.4\textwidth}|}
+\hline
+ & \textbf{\small{ResourceTypeGeneral}} & (suggestion) \textbf{ResourceType}\\
+\hline
+Table or set of tables & Dataset & observation datasets compilation evolved datasets \href{https://www.ivoa.net/rdf/product-type/2024-05-19/product-type.html}{See "product-type" IVOA vocabulary}\\ \hline
+Resource such as a table available in VO & Dataset & IVOA resource ObsCore table EpnCore table\\\hline
+Individual image & Image & Image 2D, Image 3D Sky survey\\ \hline
+Collection of images & Dataset & Images, curated images, ...\\ \hline
+Collection of Spectra & DataSet & Spectra\\ \hline
+Logs of observation & Dataset & Evolving Datasets\\ \hline
+Collection of resources having their own PID & Collection & (specify the resource type) Collection of images Collection of observations ...\\ \hline
+Set/collection of resources & DataSet & \\ \hline
+VO service & Service & IVOA service IVOA TAP service\\ \hline
+Service Web & Service & Web service\\ \hline
+Incremental dataset (HLSP) & Dataset & Evolving Dataset\\ \hline
+Instruments & Instrument & (*) see also \href{https://docs.pidinst.org/en/latest/}{PID for instrument} \href{https://docs.pidinst.org/en/latest/datacite-cookbook/metadata.html#mapping-of-pidinst-metadata-onto-datacite}{Howto}\\
+\hline
+\end{tabular}\newline
+
+%Example: Evolving Dataset \href{https://api.datacite.org/dois/10.26093/cds/vizier.102033}{https://api.datacite.org/dois/10.26093/cds/vizier.102033}
+
+\paragraph{Use web semantic for ResourceType}
+Even if the term is free, we encourage the usage of external vocabulary (rdf-semantic) such as
+
+\begin{itemize}
+\item \href{https://www.ivoa.net/rdf/product-type/}{"product-type"  IVOA vocabulary}
+\item{} \href{https://ivoa.net/rdf/voresource/content_type/}{"Content-type"  IVOA vocabulary}
+\end{itemize}
+
+\subsection{Metadata list}\hypertarget{metadata-list}{}\label{sec:metadata-list}
+
+The DataCite schema groups items in 20 categories.  All items have impacts (discoverability, reusability, citation, provenance, etc.)  and all have to be considered by the DOI producer.
+
+In this section we focus on items highly used for reusability and citation.
+
+\subsubsection{Assigning the publisher}\hypertarget{assigning-the-publisher}{}\label{sec:assigning-the-publisher}
+
+Publisher is \textbf{mandatory} in DataCite schema and consumed for provenance and citation. The publisher is the organization responsible for hosting, and distributing the resource. Organization has to be named and when it exists, it can also be identified with a persistent identifier such a RoR.
+
+\paragraph{Example:} Datacite extract (JSON)
+
+\begin{itemize}
+\item{} simple publisher in free text
 
 \begin{lstlisting}
-	
-"types": {
-  "resourceType": "evolving Dataset",
-  "resourceTypeGeneral": "Dataset"
-},
-"titles": [
-  {
-	"lang": "en",
-	"title": "The Gemini Observation Log (evolving Dataset)"
-  }
-]
+"publisher": { "name": "Centre de Donnees Strasbourg (CDS)" }
 \end{lstlisting}
 
-\subsection{Authors}\label{sec:authors}
-\important{for datasets. The good usage consists of adding all authors and not only the first author.}
+\item{} publisher with RoR:
 
-
-All authors are indeed asked by journals for citations. 
-We also encourage the author's ORCID with their affiliations. When possible, inform the RoR.\\
-
-Example of a unique author.
-
-\begin{lstlisting}%[language=json]
-	
-"creators": [
-  {
-    "name": "Ochsenbein, Francois",
-    "nameType": "Personal",
-    "givenName": "Francois",
-    "familyName": "Ochsenbein",
-    "affiliation": [
-      {
-        "name": "Observatoire astronomique de Strasbourg",
-        "schemeUri": "https://ror.org",
-        "affiliationIdentifier": "https://ror.org/04xsj2p07",
-        "affiliationIdentifierScheme": "ROR"
-      }
-    ],
-    "nameIdentifiers": [
-      {
-        "schemeUri": "https://orcid.org/",
-        "nameIdentifier": "0000-0003-4667-015X",
-        "nameIdentifierScheme": "ORCID"
-      }
-    ]
-  }
-]
+\begin{lstlisting}
+"publisher": {
+    "name": "Observatoire astronomique de Strasbourg",
+    "schemeUri'': "https://ror.org",
+    "publisherIdentifier": "https://ror.org/04xsj2p07",
+    "publisherIdentifierScheme": "ROR" }
 \end{lstlisting}
+\end{itemize}
 
-\paragraph{Creators and contributors}
-\todo{PLEASE REVIEW!}
-DataCite distinguishes Creators and Contributors. The authors are conceptually the same as the Datacite term Creators.
+\subsubsection{Title and description}\hypertarget{title-and-description}{}\label{sec:title-and-description}
 
-The \dataciteterm{creator} can be a \dataciteterm{Person} or an \dataciteterm{Organization}.
-Contributors are persons or organizations that contributed to the development of the resources (sic DataCite Schema 4.6).
-A contributor has a role (eg: Editor, Supervisor, etc.) taken in a controlled vocabulary (see \dataciteterm{contributorType} term and the complete list in DataCite Schema).\\
+Titles is a DataCite \textbf{Mandatory} metadata, it describes the resource and is exploited by search engines such as ADS (see \hyperlink{scix-curation-requirements}{Scix curation requirements}) or \href{https://eosc.eu/}{EOSC}.
 
-In a way \dataciteterm{Contributors} is an alternative of \dataciteterm{Creators}. For instance, Zenodo provides a way to add a role to creators in its upload form. However, DOI created by Zeonodo used only Creator's term.
+Assigning a title is specific to each dataset. It is a short sentence that contains the most relevant aspects of the dataset but descriptive enough to be understandable/interpretable by non-experts. This would be in the light of supporting Open Science. For datasets derived or attached to a reference article, it is better to create a new description that describes the dataset.
 
-The usage of Contributor in citation has not been evaluated today.
+\paragraph{Example} of a title used in an article and its additional dataset:
 
+Reference article: ApJ (Draper Z.H, 2000), 
+"Disk-loss and disk-renewal phases in classical Be stars. II. Contrasting with stable and variable disks"
 
-\paragraph{Authors for Collection, Services, Knowledgebases}
-Staff implied in this type of resource evolves. We recommend specifying the Organization (and the RoR if it exists) rather than contributors. Adding humans (for instance the main Creator of the service) is in the leaves to the Data publisher discretion.
+Dataset Title : VizieR, \url{https://doi.org/10.26093/cds/vizier.17860120}\newline
+"Spectropolarimetric survey of classical Be stars"
 
-\subsection{Keywords}
-\label{sec:keywords}
-We encourage the usage of recognized keywords such as UAT\footnote{\url{https://astrothesaurus.org/}},
-IVOA-UAT\footnote{\url{https://www.ivoa.net/documents/uat-as-upstream/}} or any keywords driven with a Web semantic.\\
+\paragraph{How to feed titles ?}
+We give a non exhaustive list of thought to be considered to create a useful title:
 
-The term in the DataCite schema is \dataciteterm{subject}.\\
+\begin{itemize}
+\item{} Object or type studied
+\item{} Facility used
+\item{} Release version
+\item{} Measurement method (spectroscopy, photometry)
+\item{} etc.
+\end{itemize}
 
-Example:\\
-\begin{lstlisting}%[language=json]
-	
-"subjects": [
+\paragraph{Description completes the title.}  ADS would index this as the abstract for the dataset record. Just like the title, ADS hopes this is a descriptive text, understandable for non-experts. Note that, like title, description describes the data and not its reference, even when the data comes from an original resource.\newline
+Datacite provides a controlled vocabulary for description qualifiers (Abstract, Methods, \ldots{}).
+
+\paragraph{Description for data derived from an external resource.}
+When the data derived from an external resource is not a simple copy, it is recommended to\newline
+adapt the original description. For example, in the case of data attached to a published article, rather than reproducing the abstract of the reference article (which may also be subject to the same license as the article), the description may focus on the dataset content with added information such as those useful to produce the datasets.\newline
+When the data is derived or completes an existing publication, It can be useful to specify the Origin in the text.
+
+\paragraph{Example:} VizieR DOI description example \newline
+"VizieR online Data Catalogue associated with article published in journal Monthly Notices of the Royal Astronomical Society with title ..."
+
+\subsubsection{Keyword is better with Web semantics}\hypertarget{keyword-is-better-with-web-semantics}{}\label{sec:keyword-is-better-with-web-semantics}
+
+We encourage the usage of recognized keywords such as UAT (\href{https://astrothesaurus.org/}{Unified Astronomy Thesaurus)}, \href{https://www.ivoa.net/rdf/uat/2024-06-25/uat.html}{IVOA-UAT}, FOS (\href{https://api.openaire.eu/vocabularies/dnet:fos}{Field of science}) or any keywords driven with a Web semantic.\newline
+
+\paragraph{Example:}
+\begin{lstlisting}
+"subjects": {[
   {
-    "subject": "Sky surveys",
-    "valueUri": "https://astrothesaurus.org/uat/1464",
-    "schemeUri": "http://astrothesaurus.org",
-    "subjectScheme": "UAT"
+    "subject'': "Sky surveys",
+    "valueUri'': "https://astrothesaurus.org/uat/1464",
+    "schemeUri'': "http://astrothesaurus.org",
+    "subjectScheme'': "UAT"
   },
   {
     "subject": "Earth (planet)",
     "valueUri": "https://astrothesaurus.org/uat/439",
-    "schemeUri": "http://astrothesaurus.org",
+    "schemeUri": "http://astrothesaurus.org", 
     "subjectScheme": "UAT"
   }
-]
-
+]}
 \end{lstlisting}
 
-\subsection{Dates}
-\label{sec:dates}
+\subsubsection{Dates}\hypertarget{dates}{}\label{sec:dates}
 
-DataCite provides a list of terms to qualify dates such as \dataciteterm{Created}, \dataciteterm{Updated}, \dataciteterm{Validated}, etc.\\
+Dates are Recommended by DataCite. Date is not mandatory, but it is an important metadata  to generate BibTeX (see \ref{sec:curate-doi-is-mandatory-to-extract-citation}).\newline
+A DOI can have multiple dates related to the different steps in a publishing workflow. Each date is qualified by a controlled vocabulary  (\dataciteterm{dateType}). For instance "Created" and "Updated" are the most common dates.
 
-The dates involve the publication in the data center only. For example, a dataset provided by a Data Center A may have been created months or even years ago and already published in a reference article or another Data Center B. The  \dataciteterm{Creation} date of the resource published by A is the date of creation in A.
+Examples of dates, sorted according to their role in a workflow, and applies to the same DOI resource
 
-\important{Dates have not to be used as versioning.}
+\begin{enumerate}
+\item \textbf{Submitted}: the date when the data were submitted by the data producer in a DataCenter
 
-\paragraph{Dates for Services, Knowledgebase and Collection}
-By nature, these types of resources may evolve. The frequency of updates may make it inappropriate to use the update date. For changes in architecture or data model, versions should be used.
+\item \textbf{Created}: the date when the data was created in the DataCenter. This date is particularly interesting for BibTeX generation
 
+\item \textbf{Issued}: the Date when the data has been published the first time
 
-\subsection{Title and description}
-\label{sec:title}
+\item \textbf{Updated}: the last modification (concern modification on the data). The date is important for evolving Datasets.
 
+   Some resources, such as Services, Knowledgebase or Collection are by nature resources that may evolve. The frequency of updates may make it inappropriate to use the update date. For changes in architecture or data model, DataCite:versions should be used.
+   
+\item \textbf{Withdrawn}: is a particular status that has to be specified when a resource is removed data (see \hyperlink{tombstones}{Tombstones} section)
 
-\paragraph{Titles} is an important metadata, it describes the resource and is often exploited by search engines (such as ADS or VO-registry) in a text search process.
+\end{enumerate}
 
+Again, the Date(s) involve(s) the publisher activity only (see \hyperlink{metadata-consistency}{Metadata consistency})
 
-Assigning a title is specific to each dataset. It is a short sentence that contains the most relevant aspects of the dataset but descriptive enough to be understandable/interpretable by non-experts. This would be in the light of supporting Open Science. For datasets derived or attached to a reference article, it is better to create a new description that describes the dataset.\\
+\subsubsection{Creators and contributors}\hypertarget{creators-and-contributors}{}\label{sec:creators-and-contributors}
 
-
-Example : Reference article: ApJ (Draper Z.H, 2000), \footnote{\url{https://doi.org/10.1088/0004-637X/786/2/120}}\\
-\textit{"Disk-loss and disk-renewal phases in classical Be stars. II. Contrasting with stable and variable disks"}
-
-
-Dataset Title : VizieR, \url{https://doi.org/10.26093/cds/vizier.17860120} \\
-\textit{"Spectropolarimetric survey of classical Be stars"}\\
-
-Making a good title is of course specific to the dataset. For instance, we can name the object or type studied, the facility used, the release version, or the measurement methods if it is spectroscopy or photometry, etc.
-
-
-\paragraph{Description} completes the title. 
-The ADS would index this as the abstract for the dataset record. Just like the title, ADS hopes this is a descriptive text, understandable for non-experts. Note that, like title, description describes the data and not its reference, even when the data comes from an original resource.
-
-
-Datacite provides a description qualifier (Abstract, Methods, ...) which depends on the resource.
-
-
-\paragraph{Description for data derived from external resource}
-When the data derived from an external resource is not a simple copy, it is recommended to adapt the original description. For example, in the case of data attached to a published article, rather than reproducing the abstract of the reference article (which may also be subject to the same license as the article), the description may focus on the dataset content with added information such as those useful to produce the datasets.
-
-
-Another good practice consists of adding in the description a reference to the data origin.\\
-
-
-Example : VizieR DOI description example -
-
-\textit{"VizieR online Data Catalogue associated with article published in journal Monthly Notices of the Royal Astronomical Society with title ... }
-
-\subsection{Licenses}
-\label{sec:licenses}
-
-License is one of the metadata required by FAIR principles\footnote{\url{https://www.go-fair.org/fair-principles/}}
-
-Institutes as well as countries encourage the usage of licenses for the datasets. For instance:
+DataCite makes a difference between creator and contributor.
 
 \begin{itemize}
-\item NASA encourages CC0 licence (see SPD-41)
-\item French government imposes LO/OL or CC-by licenses (see Etalab)
+\item{} The creator list is \textbf{mandatory} in the DataCite schema. A creator is any person (or organization) directly related to the creation of a resource. Creators mean to be credited in citation (they are generally in citations such as APA or BibTeX).
+\item{} The contributor list is optional. Contributors complete creators with any person (or organization) who took a part in the resource creation. The contributor is qualified with a controlled vocabulary  in the DataCite schema (eg: \dataciteterm{contributorType} "ContactPerson", "ProjectLeader", "Sponsor", etc.). Contributors are generally not in citations (such as those generated by ADS or DataCite)
 \end{itemize}
 
+``Creator'' is the Dublin Core generalization of the ``author'' concept, it is a fundamental metadata which allows to credit the authors. The creator list is used by citation generators who extract information from DOI (see \hyperlink{citation-extraction}{Citation extraction}). The good usage consists of adding all authors (and not only the first author) and to provide ORCID and affiliations each time they are known.\newline
+Sometimes, maintaining a creator list becomes difficult and specifying a full organization is privileged. It is particularly important when a lot of resources are generated by an institute. For instance Chandra pipeline specifies the full organization for their DOI observations.
 
-\important{Use machine readable licences}
+\paragraph{Example:} \url{https://api.datacite.org/dois?query=10.25574/29770}\newline
 
-It is highly recommended to use machine-readable licences using the official term or the URL link:
+Again, creators as well as contributors must be involved in the activity that generates the resource (see \hyperlink{metadata-consistency}{Metadata consistency}). The derived resources for which the scientific content has been modified don't copy generally creators of the original resource.
+
+For resource coming from a third party, it is advisable to:
+
+\begin{enumerate}
+\item{} the DOI producer has to think about 
+"Who took part in the activity of the resource that I publish?  (creators/contributors) "
+\item{} The DOI producer should contact the third party:
+"Who has to be credited (citation) in the resource that I publish? (creators)"
+\end{enumerate}
+
+\paragraph{Examples:}
 
 \begin{itemize}
-\item SPDX licenses \url{https://spdx.org/licenses/}
-\item Creative Common \url{https://creativecommons.org}
+\item{} A service like VizieR, which adds value to the data published in articles by making the data VO-compliant or by adding any other information without modifying the original content, keeps the list of authors..
+\item{} A compilation product using external resources does not keep the original authors
+\item{} The sustainability of a Knowledgebase that has evolved data and a mobile team, will put the organization only.
+\item{} Example of Resource (PDS) using creator and contributors:\newline
+"Lucy Multispectral Visible Imaging Camera (MVIC) Dinkinesh Calibrated Data Collection" \href{https://api.datacite.org/dois/10.26007/f61e-0f52}{https://api.datacite.org/dois/10.26007/f61e-0f52}
+\item{} An heterogeneous collection of datasets having each their own DOI and their own creators specifies only the publisher organization
 \end{itemize}
 
-Datacite metadata (see "Rights" in the DOI metadata schema)
+\paragraph{Who is a creator, a contributor?}
+Datacite provides a controlled vocabulary for contributors (\href{https://datacite-metadata-schema.readthedocs.io/en/4.6/properties/contributor/}{detailed in the DataCite schema}) that  allows to include persons or organizations that took part in the creation or the publication of a resource. For instance, an experience that required funding can add the Funder organisation in the contributor list. \newline
+Making the difference between creator/contributor has been debated (see url in the end of the section) because it is often difficult to classify the role of each one (for instance, what about persons in charge of the Data such as Data curator or Data manager?)\\
 
-\begin{lstlisting}{language=json}
-	
+To help the choice, we propose 2 criteria:
+
+\begin{enumerate}
+\item{} The creator takes a substantial part in  the data creation (imagine, observe, calibrate, analyse, etc.)
+\item{} The creator approves the decision to publish the final result
+\end{enumerate}
+
+Defining creator/contributor has been debated:
+
+\href{https://library.unt.edu/metadata/creator-contributor-definitions.html}{https://library.unt.edu/metadata/creator-contributor-definitions.html}
+
+\href{https://www.icmje.org/recommendations/browse/roles-and-responsibilities/defining-the-role-of-authors-and-contributors.html}{https://www.icmje.org/recommendations/browse/roles-and-responsibilities/defining-the-role-of-authors-and-contributors.html}
+
+\paragraph{Example:} extract of DataCite (JSON)
+
+\begin{lstlisting}
+"creators": [
+    {
+        "name" : "Ochsenbein , Francois",
+        "nameType": "Personal",
+        "givenName": "Francois",
+        "familyName": "Ochsenbein",
+        "affiliation": [
+            {
+                "name": "Observatoire astronomique de Strasbourg",
+                "schemeUri": "https://ror.org",
+                "affiliationIdentifier": "https://ror.org/04xsj2p07",
+                "affiliationIdentifierScheme": "ROR"
+            }
+        ],
+        "nameIdentifiers": [
+           {
+               "schemeUri": "https://orcid.org/",
+               "nameIdentifier": "0000-0003-4667-015X",
+               "nameIdentifierScheme": "ORCID"
+           }
+       ]
+    }
+]
+\end{lstlisting}
+
+\paragraph{Examples:}
+\begin{itemize}
+\item DOI having Data curator (ESO):\\ \url{https://doi.eso.org/10.18727/archive/65}
+
+\item DOI with diverses contributors (NSF): \\ \url{https://api.datacite.org/dois/application/vnd.datacite.datacite+json/10.26024/g8p7-wy42}
+
+\end{itemize}
+\subsubsection{Licenses}\hypertarget{licenses}{}\label{licenses}
+
+The "Rights" in DataCite is optional but it is a pillar for the reusability of the resources (see \href{https://www.go-fair.org/fair-principles/}{FAIR principles})
+
+Many licenses are used today for data or softwares. The most popular are listed in \href{https://spdx.org/licenses/}{SPDX}. SPDX includes \href{https://creativecommons.org/licenses/}{Creative Commons licenses} which are often used for Datasets.
+
+The choice of license is often guided or imposed by the governance (institute, country law) or may be subject to a legacy license in case of derived product. The DOI creator must be aware of the license imposed by the publisher's governance. For instance:
+
+\begin{itemize}
+\item{} NASA encourages CC0 license (see \href{https://science.nasa.gov/wp-content/uploads/2023/08/smd-information-policy-spd-41a.pdf}{SPD-41})
+\item{} French government imposes LO/OL or CC-by licenses (see \href{https://www.etalab.gouv.fr/}{Etalab})
+\end{itemize}
+
+To make a license interoperable means to be machine readable. It is advisable to use standard license acronyms and add the URL definition. The Creative Common and SPDX websites offer such URLs and acronyms.\\
+
+\paragraph{Example:} CC-by-4.0 URL
+
+\begin{itemize}
+\item{} SPDX:  \href{https://spdx.org/licenses/CC-BY-4.0.html}{https://spdx.org/licenses/CC-BY-4.0.html}
+\item{} Creative Common: \href{https://creativecommons.org/licenses/by/4.0/}{https://creativecommons.org/licenses/by/4.0/}
+\end{itemize}
+
+\paragraph{Example:} extract of DataCite (JSON)
+
+\begin{lstlisting}
 "rightsList": [
-  {
-    "rights": "Creative Commons Attribution 4.0 International",
-    "rightsUri": "https://spdx.org/licenses/CC-BY-4.0.html",
-    "schemeUri": "https://spdx.org/licenses/",
-    "rightsIdentifier": "CC-BY-4.0",
-    "rightsIdentifierScheme": "SPDX"
-  }
+    {
+        "rights": "Creative Commons Attribution 4.0 International",
+        "rightsUri": "https://spdx.org/licenses/CC-BY-4.0.html",
+        "schemeUri": "https://spdx.org/licenses/",
+        "rightsIdentifier": "CC-BY-4.0",
+        "rightsIdentifierScheme": "SPDX"
+    }
 ]
 \end{lstlisting}
 
-\subsection{Funding references}
+\subsubsection{Fundings}\hypertarget{fundings}{}\label{fundings}
 
-Financial support can be attached to a DOI using \dataciteterm{fundingReferences}.
+Financial support can be attached to a DOI using \dataciteterm{fundingReference} . Funds information is expressed with a reference to the organism, generally with an organism identifier (eg.: ISNI, Grid, Cross Funder, ROR) and an award reference (see DataCite guidance)\\
 
-Funds information is expressed with a reference to the organism, generally using a Crossref Funder ID (OFR, Open Funder Registry)\footnote{\url{https://www.crossref.org/services/funder-registry/}} or a RoR, and an award reference (see DataCite guidance)\\
+\paragraph{Examples:}
+\begin{itemize}
+\item DOI generated by NASA Planetary Data System: \newline
+\href{https://api.datacite.org/dois/application/vnd.datacite.datacite+xml/10.26007/97r3-1e19}{https://api.datacite.org/dois/application/vnd.datacite.datacite+xml/10.26007/97r3-1e19}
+
+\item DOI generated by Chandra:\newline
+\href{https://api.datacite.org/dois?query=10.25574/29770}{https://api.datacite.org/dois?query=10.25574/29770}
+
+\item Rubin Example: (using RoR)\newline
+\href{https://commons.datacite.org/doi.org/10.71929/rubin/2583847}{https://commons.datacite.org/doi.org/10.71929/rubin/2583847}
+\end{itemize}
+
+Fundings is a metadata consumed by scientific platforms  such as EOSC.  They are used by research funding agencies who wish to establish usage statistics related to their investment.
+
+\subsection{Citation extraction}\hypertarget{citation-extraction}{}\label{sec:citation-extraction}
+
+Now that the DOIs have been properly curated, we will be able to extract metadata to make citations and to credit resources.
+
+DOI is well suitable to link data in articles. It can be inserted everywhere (in footnote, in the text or in acknowledgment) with hyperlinks using the DOI or hidden under a human readable text using metadata such as title, authors or content type.
+
+Citations in an article are the references list which credits the authors. A citation is not a footnote URL, an acknowledgment or any DOI string in the text. It ONLY refers to listing the reference in a reference list of an article.\newline
+Citations use formats such as BibTeX or APA which include the basic DOI metadata. Many indexing services  harvesting  DOIs (from DataCite, CrossRef or other) extract metadata that they then format into web pages with sometimes in addition a citation service for the resources.
 
 
-Example: DOI generated by NASA Planetary Data System:\\
-\url{https://api.datacite.org/dois/application/vnd.datacite.datacite+xml/10.26007/97r3-1e19}\\
+For instance, DataCite provides a citation output in BibTeX format:
 
-Example: DOI generated by Chandra:\\
-\url{https://api.datacite.org/dois?query=10.25574/29770}
+\begin{lstlisting}
+curl -LH "Accept: application/x-bibtex" https://doi.org/10.5270/esa-1ugzkg7
+\end{lstlisting}
+
+Some agencies make statistics on citation extracted from articles which include references such as articles or datasets. DataCite provides is own public statistics on any resources which have been cited in DOI metadata. Each time a DOI is generated with a "Cites" relation (see linked data in section \ref{sec:a-basic-tour-of-relationship-motivating-by-their-usage}) the counter is incremented. The statistics are available through the DataCite API.\\
+
+Note: Publishers that provide DOI for resources deriving from other products should consider how to cite the original data. Citing is possible in the DataCite schema that provides relationships to cite resources (see linked data in section \ref{sec:a-basic-tour-of-relationship-motivating-by-their-usage}). %Datasets derived from other products should be listed in the DOI metadata. For this, we use the relations \datacitetag{relatedidentifier}{relatedIdentifier} using the term "Cites". This good practice should be used to link any references or original data when they have been published (see linked data section \ref{sec:a-basic-tour-of-relationship-motivating-by-their-usage})
+
+\subsubsection{Curate DOI is mandatory to extract citation}\hypertarget{curate-doi-is-mandatory-to-extract-citation}{}\label{sec:curate-doi-is-mandatory-to-extract-citation}
+
+The citation that can be extracted from a DOI is only useful if the DOI's metadata is properly curated with the quality fixed by journals, ADS or Data publishers.
+
+In this section, we summarize the metadata expected to obtain a clean citation in an annotated BibTeX Format. The BibTeX is based on ADS.
 
 
-\subsection{Identifier for project}
+\paragraph{BibTeX template} using DOI metadata \\
+Note:  the BibTeX type "@dataset" which  is specific to ADS and is not used by services such as DataCite which uses the generic term "@misc".
 
-At the time of writing, RAID (Research Activity Identifier) is new in the open DATA scene. We do not have feedback to provide any best practice. However, an agreement between the RAID maintenance organisation (Australian Research Data Commons\footnote{\url{ Australian Research Data Commons}}) and DataCite makes possible to generate such identifiers from DOIs (using \dataciteterm{resourceTypeGeneral} "Project")
+
+\begin{lstlisting}
+@dataset { { localref },
+	author = { authors } ,
+	title = "{ title }",
+	year = { year },
+	month = {month },
+	eid = { usualName },
+	url = { url },
+	keywords = { keywords },
+	publisher = { publisherName },
+	copyright = { rights },
+	DOI = {DOI}
+}
+\end{lstlisting}
+
+\begin{tabular}{|p{0.2\textwidth}|p{0.3\textwidth}|p{0.5\textwidth}|}
+\hline
+\textbf{BibTeX} & \textbf{DataCite} & \textbf{Relevance for citation}\\
+\hline
+authors & Authors & MUST, see \hyperlink{creators-and-contributors}{Creators and contributors}\\
+title & Title & MUST, see \hyperlink{title-and-description}{Title and description}\\
+year & Date:creation & MUST, see \hyperlink{dates}{Dates}\\
+month &  & \\
+eid & alternateIdentifier & MAY, see Linked data in section \ref{sec:linked-data-with-internal-and-external-resources}\\
+url &  & SHOULD, use DOI URL\\
+keywords & Subjects & SHOULD, see \hyperlink{keyword-is-better-with-web-semantics}{Keyword is better with Web semantics}\\
+publisher & Publisher & MUST, see \hyperlink{assigning-the-publisher}{Assigning the publisher}\\
+copyright & Rights & RECOMMENDED, see \hyperlink{licenses}{Licenses}\\
+DOI &  & MUST\\
+resource\_type & resourceTypeGeneral & MUST, see \hyperlink{assigning-resource-type}{Assigning resource type}\\
+\hline
+\end{tabular}\\
 
 
-%-------------------------------------------------------------------------------------------
-\section{Recommendation checklist}
+\paragraph{Template Citation } in APA style
 
+\begin{lstlisting}
+{authors} ({year}). {title} [{resource_type}]. {publisher}. {DOI}
+\end{lstlisting}
+
+\paragraph{VizieR example in APA style:} (catalogue J/MNRAS/320/451)
+\begin{lstlisting}
+Beers, T. C., Rossi, S., O'Donoghue, D., Kilkenny, D., Stobie, R. S., 
+Koen, C., & Wilhelm, R. (2006). A-G star metallicity [Data set].
+Centre de Donnees Strasbourg (CDS). https://doi.org/10.26093/CDS/VIZIER.73200451
+\end{lstlisting}
+
+\subsubsection{Using DOI for Evolving DataSet}\hypertarget{using-doi-for-evolving-dataset}{}\label{using-doi-for-evolving-dataset}
+
+There are different approaches for \hyperlink{evolving-datasets}{evolving Datasets} citation which depends on the Data Center implementation.
+
+\begin{itemize}
+\item  Cite a snapshot of the Dataset. 
+
+In this approach, the Data Center makes snapshots and adopts a DOI \hyperlink{versioning}{versioning mechanism}.
+
+\item The Data center provides a template for citation. %Example in APA style:
+
+%\begin{lstlisting}
+%{authors} ({year\}). {title} [evolving Dataset]. {publisher}.
+%{DOI}. Accessed {date_of_access}
+%\end{lstlisting}
+
+%In the example date\_of\_access could be the 'update' date of the DOI record (assuming that the dataset and its DOI are well synchronized).
+
+\item Cite a DataSet extraction resulting from a query. \newline
+The solution may become complex if we take or not the reproducibility aspect. A simple solution without reproducibility constraint consists, in an article, to cite the evolving Dataset and to specify the query outside the citation, somewhere in the text.\newline
+An option taking into account the reproducibility has been adopted by the VAMDC Query Store where query and result are hosted with a DOI (giving details are not in the scope of this note).
+
+\end{itemize}
+
+\subsubsection{Citing Collections}\hypertarget{citing-collections}{}\label{citing-collections}
+
+Practice shows that the quality required to extract a good citation is often not obtained from the DOI of Collections. This lack of information is often due to the concept which is of a different nature.
+
+The usage of Collections can be ambiguous for article editions. We report two usages, without wanting to endorse either.
+
+\begin{itemize}
+\item{} Collection is not intended to be cited in articles.\newline
+The role of Collection (potentially having poor metadata) seems to be essentially to establish relation (with the advantage of the flexibility of the URL resolution that the DOI offers).\newline
+This approach is chosen by MAST
+\item{} The preferred citation is the Collection.\newline
+Collections are intended to collect and distribute credit to \& collection of entities they contain.\newline
+Sometimes, individual entities have poor metadata in favor of global metadata (in Collections). In this architecture, because heritage is not trivial for harvesting, it results that individual resources have no metadata allowing citation.\\
+%This approach is chosen by Chandra
+\end{itemize}
+
+\section{DOIs across networks}\hypertarget{dois-across-networks}{}\label{dois-across-networks}
+
+\subsection{Dissemination of resources through complementary networks}\hypertarget{dissemination-of-resources-through-complementary-networks}{}\label{dissemination-of-resources-through-complementary-networks}
+
+Open data emerged in the academic landscape through online publication via various networks and web services.  Some are historical , developed by institutes such as ADS, while others have been added more recently such as \href{https://fairsharing.org/}{FairSharing}, \href{https://www.academia.edu/}{https://www.academia.edu/}, or the European Open Science Cloud (\href{https://eosc.eu/}{EOSC}).\newline
+A multitude of standards have been created, covering roles such as identification (DOI, RoR, ORCID, ISSN, ...)  or data modeling. Each Network implements one or more standards (e.g., the IVOA includes DOI, ORCID in VOResource) depending on their objective. Even if a common basis can be extracted, which allows to map serialization together, these are complementary and specific (see \hyperlink{connecting-doi-and-the-ivoa}{Connecting DOI and the IVOA}).
+
+Datasets distributed in diverse frameworks are harvested by platforms that combine the different sources. These indexing services group together the information relating to the same resource, they merge the metadata which are both redundant and specific to each harvested network. This cross operation process (for instance \href{https://www.openaire.eu/}{OpenAire}) is often a black box and depends on the indexing service's strategy. Note that DOI, as a unique identifier, facilitates the cross operations.
+
+The list of metadata tends to increase, but the most popular are DataCite schema, \href{https://www.dublincore.org/}{Dublin Core}, the registry of the Virtual Observatory \citep{std:registry}, \href{https://schema.org/}{schema.org} (extends Dublin Core and is used by Google), \href{https://www.w3.org/TR/vocab-dcat-3/}{DCAT} (linked catalogues, datasets and services. DCAT is a concurrent of\newline
+the VO registry), \href{https://opencitations.net/}{OpenCitation} \citep{Peroni_2020} (a schema of linked citation), etc.
+
+\important{All are specific, and we highlight the importance for Data providers to disseminate consistent metadata (for instance list the whole authors in all output).}
+
+The importance, but also the specificity of the metadata have been discussed in IVOA DCP session (see the presentation of H.Enke, Interop 2023, Bologna ). In practice, it is better for implementers to think from the beginning about the different output in order to provide a consistent workflow.\newline
+Note DataCite provides several serializations of the metadata, in particular "schema.org".
+
+\important{Maintain broadcast workflows together. }
+
+\subsection{Linked data with internal and external resources}\hypertarget{linked-data-with-internal-and-external-resources}{}\label{sec:linked-data-with-internal-and-external-resources}
+
+Open data provides reusable and interoperable data. The term interoperability taken in a broad context, describes an interconnected network made of a multitude of documents shared through specific sub networks. The DOI metadata allows linking documents together in order to improve the provenance with additional documents, to cite their origin or to link versioned resources.
+
+Linked data are currently exploited by \href{https://search.opencitations.net/}{OpenCitation} that makes citation graphs, by EOSC for discoverability by providing links in the results of search queries. This capability interests ADS who could integrate the information in the future.\\
+
+
+Relationships allow to make linked data in the DataCite schema; they have been the subject of a supplementary section in the DataCite guidance. RelatedIdentifier is an option in DataCite that recommends adding at least one relation (for instance to link a dataset with a reference article).
+
+
+% is a couple  URI + predicate that describes the nature of the relation. \newline
+
+
+%DataCite provides a list of controlled  \href{\datacitepropurl/relatedidentifier/\#b-relationtype}{relationship vocabulary} that allows to specify the nature between resources. These relations may use DOI or other sustainable identifiers taken into a controlled  \href{\datacitepropurl/relatedidentifier/\#a-relatedidentifiertype}{relatedIdentifierType} list (eg: bibcode).
+
+
+%DOI has to be privileged than any other identifier or URI. DOI facilitates the harvesting/merging jobs. For instance the EOSC EU Node portal displays related resources having recognized PID.
+
+%These links assume the form, "archive DOI \textless{}predicate\textgreater{} external object".  It is often important to remember this, say it outloud, and repeat it whenever making a related link.
+
+
+\subsection{A basic tour of relationship motivating by their usage}\hypertarget{a-basic-tour-of-relationship-motivating-by-their-usage}{}\label{sec:a-basic-tour-of-relationship-motivating-by-their-usage}
+
+In this document, we focus on a short list of relationType responding to the most important use case and dedicated to Provenance, Citation and Versioning.
+
+\important{The relationship vocabulary is precise. Too often, providers give their own interpretation of the terms. If there's any doubt about the meaning of the vocabulary, it's better to put no relations than a misunderstood relationship.}
+
+\subsubsection{Express a Relationship}
+DataCite schema allows to build relationships, including the nature of the relation, with the term \datacitetag{relatedidentifier}{RelateIdentifier}.\\
+
+A relationship can be summarized in a RDF triple :
+
+\begin{lstlisting}
+    <current resource> <predicate> <external resource>
+\end{lstlisting}
+
+\paragraph{Example: }  linking a dataset with its article 
+\begin{lstlisting}
+    <https://doi.org/10.26093/cds/vizier.22640008>  
+       isSupplementTo <https://doi.org/10.3847/1538-4365/ac9af8>
+\end{lstlisting}
+
+The predicate is a term taken into a controlled \href{\datacitepropurl/relatedidentifier/\#b-relationtype}{relationship vocabulary} which expresses the nature of those relationships (more details in the next sections). \\
+
+
+The identifiers must be unique and, preferably persistent (PID) and resolvable. 
+The identifier type must be specified from a controlled vocabulary using the term \href{\datacitepropurl/relatedidentifier/#a-relatedidentifiertype}{\dataciteterm{relatedIdentifierType}}. The list includes common identifiers (eg: DOI, bibcode, ISSN), URL or resolvable identifier such as PURL or W3id\footnote{\url{https://guidelines.openaire.eu/en/latest/data/field_identifier.html}}.
+
+Choosing the identifier is important and depends on their usage in the Open Data landscape. 
+For instance, the bibcode which is available in Datacite schema but not in OpenAire \footnote{\url{https://guidelines.openaire.eu/en/latest/data/field_identifier.html}} have a limited use for each service that uses the OpenAire process.
+
+
+\important{To facilitate the harvesting/merging jobs, the DOI has to be privileged than any other identifier or URI.}
+
+\subsubsection{Term to link resources with their origin}
+It is commonly used to link a dataset with an article or with its original dataset. These references (in bold) are currently exploited by EOSC.
+
+\begin{itemize}
+\item{} \textbf{Cites}\newline
+If you applied a specific, published technique to generate your data set, reference the article that describes that technique with a referenceType of "Cites".
+
+Authors motivated by credits can query DataCite that make (public) statistics with the term "Cites" . Statistics are incremented each time a DOI is created with the "Cites" term. However, these statistics are independent of the statistics generated by classical indexing services such as ADS.
+\item{} \textbf{isCitedBy}\newline
+Is the "Cites" reciprocal term that could be used, for instance; when the dataset is cited by the article. Sometimes the article may cite a dataset that has been published previously. At other times, the dataset is published in conjunction with the article or has been reproduced in its identical form or with added value at a later date. It should be noted, however, that the notion of "isCitedBy" requires a workflow synchronisation that is not always easy to implement.
+\item{} \textbf{IsSupplementTo}\newline
+if the dataset is supplementary (e.g., it contains the data used to create a plot or table accompanying the article), use a relationType of "IsSupplementTo"
+\item{} \textbf{IsDerivedFrom}\newline
+If your data were derived from a previous dataset, include the DOI of that data set with a referenceType of "IsDerivedFrom". IsDerivedFrom has to be used for any data that has been made from an original resource. DataCite accepts the case that a dataset is derived from a larger dataset or dataset with values that have been manipulated from their original state.
+\item{} \textbf{IsVariantFormOf}\newline
+If your data is a copy of an original Dataset, the term is adapted for you. In a more general case, the term includes a dataset in which the original content has not been modified. It includes a dataset with added values or with any "decoration" that does not modify the scientific content.
+\item{} \textbf{IsCollectedBy}\newline
+Specify an instrument used to collect the dataset.
+\end{itemize}
+
+\paragraph{Other terms}
+\begin{itemize}
+	\item What about "IsIdenticalto" ?\newline
+IsIdenticalTo means datasets byte-by-byte equivalent and disapproved of any additional data or fantasy. The intellectual or administrative property of the document is also not a sufficient reason to use this term.\newline
+Frequently, even copies are variants, \textbf{so privilege other terms such as isVariantFormOf}.
+
+\item "\textbf{References}" may be used to link another resource which is  particularly important for the  understanding of the data. For instance an instrument calibration document which was used to perform observation.
+
+\end{itemize}
+
+\paragraph{Examples:}
+\begin{itemize}
+	\item Linking Data with article in VizieR:\newline
+(extract from \url{https://doi.org/10.26093/cds/vizier.22640008}).
+
+\begin{lstlisting}
+<relatedIdentifiers>
+  relatedIdentifier relatedIdentifierType="bibcode" relationType="IsSupplementTo">
+   	2023ApJS..264.8H
+  </relatedIdentifier>
+</relatedIdentifiers>
+\end{lstlisting}
+
+\item Linking Dataset with original resource\newline
+(extract from \url{https://doi.org/10.26093/cds/vizier.1355}).
+\begin{lstlisting}
+<relatedIdentifiers>
+  <relatedIdentifier relatedIdentifierType="DOI" relationType="IsVariantFormOf">
+    10.5270/esa-qa4lep3
+  </relatedIdentifier>
+</relatedIdentifiers>
+\end{lstlisting}
+
+\end{itemize}
+
+Seel also the \href{https://zenodo.org/records/16953589}{GREI Metadata Recommendations from DataCite schema version 4.6}
+
+\subsubsection{Dealing with Collection}
+The following terms allow to report the hierarchy in an archive. They should be emphasized with type Collection.
+
+\begin{itemize}
+\item{} \textbf{isPartOf}\newline
+Any resource which is a part of a collection. For instance a Document resulting from a set of observations in a mission context.
+\item{} \textbf{hasPart}\newline
+Collections having a reasonable list of children can use this term.
+\end{itemize}
+
+\paragraph{Example} 
+\begin{itemize}
+	\item Collection in Chandra archive:
+
+Dataset observation: \url{https://doi.org/10.25574/23336}\\
+Which isPartOf the chandra Collection: \url{https://doi.org/10.25574/csc2.stk.acisfj2008299p002118_001} (defined as ResourceTypeGeneral=Dataset)\\
+
+
+\item Data releases from the NSF-DOE Vera C. Rubin Observatory also defines a parent DOI for the entire data release and then link each distinct dataset type with hasPart/isPartOf relationships. This approach is described in \url{https://doi.org/10.71929/rubin/2583847}.
+
+
+\item The deep coadd images \url{https://doi.org/10.71929/RUBIN/2570313} isPartOf Rubin LSST Data Preview 1: \url{https://doi.org/10.71929/rubin/2570308}
+\end{itemize}
+
+\subsubsection{Managing version and obsolescence}
+
+See also the section \hyperlink{versioning}{Versioning}.
+
+\begin{itemize}
+\item{} \textbf{IsNewVersionOf} / \textbf{IsPreviousVersionOf}\newline
+The terms allow linking different versions of a resource together as a graph view. It can be used without using a Collection hierarchy.
+\item{} \textbf{HasVersion}\newline
+This term is used by Zenodo which creates a Collection that includes all versions (see ......)
+\item{} \textbf{ObsoletedBy / Obsoletes}\newline
+When a dataset is obsoleted by a new product. Obsolescence is neither versioning, nor reflecting that a resource disappeared (see tombstone page). \newline
+The state of obsolescence of a resource always relates to an object (cd may be a method, software that no longer adapts to a new format, data cannot be used in a recent context, etc.)\newline
+The obsolete stuff continues to be accessible, but can't be used for current or future operations.
+\end{itemize}
+
+\subsection{Connecting DOI and the IVOA}\hypertarget{connecting-doi-and-the-ivoa}{}\label{connecting-doi-and-the-ivoa}
+
+\subsubsection{Status of DOI in the Virtual Observatory}\hypertarget{status-of-doi-in-the-virtual-observatory}{}\label{status-of-doi-in-the-virtual-observatory}
+
+The IVOA registry uses IVOA identifiers (\href{https://www.ivoa.net/documents/IVOAIdentifiers/}{IVOID}) \citep{note:ivoid} which are only usable within the IVOA registry ecosystem. At the time of writing, DOIs are not fully integrated in VO standards.They can be used in the IVOA  Registry since VOResource 1.2 \citep{2018ivoa.spec.0625P} for any "ResourceName" such as  alternate identifier or related resources. They are also used in the DataOrigin\citep{note:dataorigin} as metadata that a service can provide in the result of a query and in the BibVO note \citep{note:bibvo} which is an architecture based on registry to link Data and articles.
+
+\subsubsection{DOI and IVOA networks complete each other}\hypertarget{doi-and-ivoa-networks-complete-each-other}{}\label{doi-and-ivoa-networks-complete-each-other}
+
+The IVOID  is a unique identifier for a resource (dataset or service) in the Virtual Observatory Registry. Registry record has metadata which includes entry points to access the resource via web services. The access information needs a machine interpretation and its usage is generally hidden for users.\newline
+The IVOID and the IVOA Registry are meant to ensure findability and technical interoperability (how do I find a resource and what protocol can I use?). When they represent datasets, the services to access the data are described in detail. For instance the vocabulary of the registry extends the relations with a term "isServedBy" to link Data and Service. The absence of an equivalent term in DataCite makes it illusory to try and transcribe the same level of interoperability in DOI.
+
+The DOI is a persistent identifier for resource(s) that can be used for citation. The DOI is visible for users and it handles a landing page human-readable. The metadata include attribution, references, relations, license, but nothing about programmatic access or interoperability.
+
+VO Registry and DataCite schemas are based on DublinCore terms extended with their own specifications. Despite a common basis, the vocabularies differ. The DataOrigin note provides in Appendix a mapping between DataCite and VOResource for a sub selection of terms. Note that the endorsement process of DataOrigin has not been initiated.
+
+DOI and IVOA registry have their own scope. IVOID is used by the Virtual Observatory to query data whereas the DOI is widely used in the science context in literature, scientific search engines (ADS, Eudat, scholar, researchgate, etc), or platforms such as EOSC. In order to connect the networks, we propose a solution, illustrated by usage scenarios, based on the concepts of "alternative identifiers" existing in both environments.
+
+\subsubsection{How and why to connect DOI and IVOA networks?} \hypertarget{how-and-why-to-connect-doi-and-ivoa-networks-how-and-why-to-connect-doi-and-ivoa-networks}{}\label{sec:how-and-why-to-connect-doi-and-ivoa-networks-how-and-why-to-connect-doi-and-ivoa-networks}
+
+In this section we discuss scenarios that motivate to make the bridge between IVOA and DOI networks.\newline
+The proposed solution, for each use-case, is based on alternative identifiers existing in each schemas.
+
+\begin{itemize}
+\item{} A user finds a relevant dataset (from EOSC or any other platform). The DataCite metadata indicates an IVOID as an alternate identifier. Then information is used by the user who queries the registry included in VO tools or API such as pyvo. Finally, he/she finds the IVOA description that allows to extract and manipulate data.
+
+
+Proposal: Specify the ivoid as AlternateIdentifier in DOI metadata
+
+\textbf{Example of an alternate identifier in a DataCite record using IVOID.}
+\begin{lstlisting}
+  
+"identifiers": [ {
+  "identifier": "ivo://CDS.VizieR/j/mnras/320/451",
+  "identifierType": "ivoid"}
+]
+\end{lstlisting}
+
+\item{} The user finds an interesting dataset using VO tools, thanks to the metadata in the registry, the user finds the bibliographic links (DOI).
+
+Proposal: Specify the DOI in the VO registry record
+
+\textbf{Example of DOI in a registry record:}
+
+\begin{lstlisting}
+<altIdentifier>doi:10.26093/cds/vizier.73200451</altIdentifier>
+\end{lstlisting}
+
+\item{} A user finds a relevant article in ADS/EOSC and he/she would like to query the datasets related to the articles. (today, you can use the VO registry and make a search based on criteria such as authors, title description, etc). ADS  or EOSC uses the relations in the Datasets to link the article with the dataset, then the alternate identifier specifies if the data are registered in VO.
+\end{itemize}
+
+\paragraph{Implementing DataOrigin in VOTable}
+The DataOrigin note \citep{note:dataorigin} defines a framework to describe the data that were used to produce a resultset. It includes the IVOID and DOI identifiers.
+
+\subsection{DOI consuming in ADS/SciX}\hypertarget{doi-consuming-in-adsscix}{}\label{doi-consuming-in-adsscix}
+
+The \href{https://www.scixplorer.org/}{Science Explorer} (SciX) \citep{2025AAS...24544204B} is a digital library portal for researchers in Astronomy, Earth science, Heliophysics, Physics, and Planetary Science. SciX is a multidisciplinary library based on the successful \href{https://ui.adsabs.harvard.edu/}{Astrophysics Data System} (ADS) that has served astronomers and astrophysicists for more than a quarter century. While currently still represented by two websites, soon the ADS will \href{https://scixplorer.org/adstoscix}{transition} to SciX. The system provides links to articles and associated data with a base of information such as authors, dates, journal, titles, descriptions , keywords. The project curates the metadata (such as author identification with ORCID) that allows it to provide clean citations in different formats. This citation, commonly used by authors that need to cite their sources, allows the ADS to generate statistics on the indexed resources.
+
+\subsubsection{SciX curation requirements}\hypertarget{scix-curation-requirements}{}\label{sec:scix-curation-requirements}
+
+SciX works with Editors, Publishers and Organizations to harvest resources. DOIs, created in Crossref or in DataCite, are used in input (for harvesting) and in output (for citation). One of the biggest challenges ADS encounters falls basically in three categories:  bad metadata, incomplete metadata and inconsistent metadata.
+
+\begin{itemize}
+\item{} Bad metadata occurs when the metadata supplied does not follow the metadata model.\newline
+It includes both, misunderstanding of the schema (for instance incorrect resourceType that happens in particular with Collections) and uncurated data (for instance when the information does not match the schema definition. Eg: eg: \textless{}creator\textgreater{}Henneken et al. (2024)\textless{}/creator\textgreater{}).
+
+\item{} Incomplete metadata means  less useful records (or meaningless records in the worst case). The \href{https://scixplorer.org/scixblog/data-linking-I}{SciX blog} on data indexed in SciX (to capture citations) specifies a minimal set of metadata desired for indexing data
+
+\item{} Inconsistent metadata occurs when the registered metadata differs from what is listed on the landing page (like e.g. a different list of creators). These differences in metadata impact the quality of (BibTeX) citations of data which becomes dependent on the place where they are generated or harvested.
+\end{itemize}
+
+\subsubsection{Meta-data harvesting.}\hypertarget{meta-data-harvesting}{}\label{sec:meta-data-harvesting}
+
+SciX has consumed Crossref metadata for decades, allowing a highly complete service of published articles in the community. Now, SciX has started to also harvest DataCite metadata for indexing and linking records.  However, the practices used by many disciplinary archives fail to provide consistent rich metadata across all networks.
+
+The challenge consists in building an information system with metadata coming from different networks which use each of their schemas. For instance the DOI schema and schema.org which is sometimes used in landing pages. The effort is hard with inconsistent metadata.  SciX therefore expects that data centers adopt workflows that provide consistent metadata (for instance with extracting the schema.org from\newline
+the DataCite metadata)
+
+In December 2025, relations are not yet extracted from the DOI metadata by SciX. However, extracting this information is on the SciX roadmap to be implemented in 2026.
+
+\section{Appendix}\hypertarget{appendix}{}\label{sec:appendix}
+
+\subsection{Recommendation checklist}\hypertarget{recommendation-checklist}{}\label{sec:recommendation-checklist}
 
 \begin{enumerate}
-	\item Choose adequate granularity. The granularity depends on parameters such as citation, discoverability, traceability. Consider also that DOI need maintenance for the long term  (see \ref{sec:bestpractice:providing})
-	\item Select the \textbf{Resource type} and adopt the usage specific to the chosen category (see \ref{sec:resourcetype}).
-	\item \textbf{Landing page} (see \ref{sec:landingpage})
-	\begin{itemize}
-		\item Check if DOI metadata are displayed in the landing page 
-		\item Complete the landing page with added information such as links to datasets and any other metadata used in other dissemination workflows
-		\item Check if the landing-page is machine-readable
-	\end{itemize}
-	\item \textbf{Provide curated metadata}, in particular:
-	\begin{itemize}
-		\item List all authors with ORCID and affiliation when they are known (see \ref{sec:authors})
-		\item Add machine readable licence (see \ref{sec:licenses})
-		\item Add the publication date in the Data Center (see \ref{sec:dates})
-		\item Choose title matching with the Content and the type of the resource (see \ref{sec:title})
-	\end{itemize}
-	\item Check if \textbf{metadata allows to generate citations} (see \ref{sec:citation}).	
-	
-	For ADS indexing, it would be desirable to have a description (abstract) and keywords in addition to the BibTex metadata.
-	
-	\item \textbf{Link your Datasets} with resources (see \ref{sec:linkeddata})
-	\begin{itemize}	
-		\item Do not misinterpret the meaning of a semantic. The relations semantics are precise, in case of doubt it is better to put nothing. 
-		The IVOA DCP working group can also help you\footnote{\url{mailto:datacp@ivoa.net}}
-		\item Link the DOI with resources which are used to generate the dataset. For instance datasets attached to an article, or when they come from an original archive.
-		\item add Alternate identifiers. In particular add IVOID if it exists (see \ref{sec:altidentifier})
-	\end{itemize}
-	\item Ensure the maintenance of the DOI\\
-	Ensure that all your dissemination workflows are consistent, in particular, with IVOA registry and with "schema.org" (see \ref{sec:bestpractice:providing})
-	\item Use a \textbf{versioning mechanism} each time your datasets evolved.\\
-	Distinguish dataset versioning (the Data Center responsibility) and metadata versioning (automated versioning done by DataCite at each update) (see \ref{sec:version})
-	\item Ensure the sustainability of the landing pages.\\
-	If for any unfortunate reason, the datasets is no more available, provide a Tombstone page explaining the reasons (see \ref{sec:tombstone})
+\item{} Take in consideration that creating a DOI is forever (\hyperlink{doi-lifecycle}{DOI Lifecycle}) and implies ownership and maintenance for the long term (\hyperlink{considering-a-doi-solution}{Considering a DOI Solution})
+\item{} Target the resources and choose the adequate granularity. The granularity depends on parameters such as citation, discoverability, traceability.
+\item{} Map the metadata  with the DOI schema (the schema depends on the RA).
+Take a particular attention with:
+
+
+\begin{itemize}
+\item{} The choice of the resources (\hyperlink{assigning-resource-type}{Assigning resource type})
+\item{} List all authors with ORCID and affiliation when they are known (\hyperlink{creators-and-contributors}{Creators and contributors})
+\item{} Add machine readable license (\hyperlink{licenses}{Licenses})
+\item{} Make metadata consistent with the activity (dates,  title, ...  must describe your activity) (\hyperlink{metadata-consistency}{Metadata consistency})
+\end{itemize}
+\item{} Make landing page
+
+
+\begin{itemize}
+\item{} Check if DOI metadata are displayed in the landing page
+\item{} Complete the landing page with added information such as links to datasets and any other metadata used in other dissemination workflows
+\item{} Check if the landing-page is machine-readable
+\end{itemize}
+\item{} Check if metadata allows to generate citations (\hyperlink{citation-extraction}{Citation extraction}).\newline
+For ADS indexing, it would be desirable to have a description (abstract) and keywords in addition to the BibTeX metadata.
+\item{} Link your Datasets with resources (\hyperlink{a-basic-tour-of-relationship-motivating-by-their-usage}{A basic tour of relationship motivating by their usage})
+
+
+\begin{itemize}
+\item{} Do not misinterpret the meaning of a semantic. The relations semantics are precise. The IVOA DCP working group can also help you.
+\item{} If existing, make the links between resources that you provide (eg: collection, ...)
+\item{} Link the DOI with resources which are used to generate the dataset. For instance datasets attached to an article, or when they come from an original archive
+\item{} add Alternate identifiers. In particular add IVOID if it exists (\hyperlink{how-and-why-to-connect-doi-and-ivoa-networks?}{How and why to connect DOI and IVOA networks?})
+\end{itemize}
+\item{} Ensure the maintenance of the DOI\newline
+Ensure that all your dissemination workflows are consistent, in particular, with IVOA registry and with "schema.org"
+\item{} Use a versioning mechanism each time your datasets evolved. distinguish dataset versioning (the Data Center responsibility) and metadata versioning (automated versioning done by DataCite at each update) (\hyperlink{versioning}{Versioning})
+\item{} Ensure the sustainability of the landing pages.\newline
+If for any unfortunate reason, the datasets is no more available, provide a Tombstone page explaining the reasons (\hyperlink{tombstones}{Tombstones})
 \end{enumerate}
 
+\subsection{Building landing pages}\hypertarget{building-landing-pages}{}\label{sec:building-landing-pages}
 
-\appendix
-\section{Catalog of Repositories and Archives issuing DOIs}
-\label{sec:catalog}
+Landing page is a human readable WEB page attached to the DOI. Datacite provides a documentation about good usage
 
-This is not an update of the \citet{2022ApJS..260....5C} appendix. 
-This is meant to also provide additional information about what kinds of DOIs are minted and what types of deposits the archive will accept.
+\important{The landing page is primarily dedicated for Human. The DOI metadata should be visible in the web page. In particular, the DOI, title, authors, licenses should be highlighted.}
 
-\subsection{Domain Specific repositories}
-\textbf{\color{red}  TODO add brief descriptions}\\
+Additional information is often added. In particular links to access the data, but also any other information, specific to the data center or included in other workflows provided by the Data Center (BibTeX, schema.org, DCAT,, etc)
 
-\begin{enumerate}
-	\item CADC
-	\item CDA
-	\item China-VO
-	\item ESA
-	\item ESO
-	\item IPAC
-	\item MAST
-	\item NEA
-	\item PDS
-\end{enumerate}
+\paragraph{Landing page for service of Knowledgebase} 
+The landing page of a service or a Knowledgebase is generally its web portal. It includes both service access and information (eg: contact, about, etc.)
 
-\subsection{Generalist repositories}
+\paragraph{Landing page for collection} 
+This page contains information that is common to every datasets in the collection. Each Dataset specificity is not shown on this page. The content depends on the nature of the collection: for instance the Organization, an abstract, the date of creation or the materials used to generate the individual datasets.\newline
+The page should provide the way to access individual datasets.
 
-\begin{enumerate}
-	\item Dataverse: Open source research data repository software.\\
-	Dataverse includes data management from input to the output, provides DOI, OAI-PMH.
-	\item Dryad: Open data publishing platform for authors.
-	\item Zenodo: Zenodo is a popular platform for authors. Zenodo uses the DataCite and generates DOI. The curation leads to authors.\\
-	Zenodo developed by the CERN provides Invenio (Open Software) which is an alternative to Dataverse 
-	\item FAIRsharing \cite{https://doi.org/10.25504/fairsharing.rd6gxr}: A curated, informative and educational resource on data and metadata standards, inter-related to databases and data policies. The Standards and endorsed notes provided by the IVOA have a DOI created by FAIRsharing
-\end{enumerate}
+\paragraph{Generate a machine-readable landing page}
+Search engines harvest landing pages for indexation and expect some metadata serialized with a standard semantic. For instance ``\href{http://schema.org}{schema.org}'' or \href{https://www.w3.org/TR/vocab-dcat-3/}{DCAT} serialized in JSON-LD are needed by Google Datasets.\\
 
+The FAIRness of the landing page can be evaluated with validators:
 
-%--------------------------------------------------------------------------------------
-\section{Important DataCite Metadata Case Studies}
-This section describes case studies around the metadata created by three archives. 
-These case studies let us break out specific DataCite metadata recommendations and JSON snippets
+\begin{itemize}
+\item{} \href{https://fair-checker.france-bioinformatique.fr/check}{FAIRchecker}
+\item{} Google Search central
+\end{itemize}
 
-\subsection{Chandra Data Archive}
-The CXC created DOIs for each single Chandra observation, data entities of the Chandra Source at the single observation and stacked observation level, and publication-based, user-requested Chandra Data Collections. CXC mints DOIs with its own DataCite prefix and different DOI names for each of the classes of DOIs created (see below). For each class of Chandra DOIs, a comprehensive set of Chandra-related DataCite metadata are automatically specified and updated upon specific trigger actions; multiple types of DataCite related identifiers are used to connect DOIs of related data entities in the Chandra archive".
+\subsection{Example of existing DOI}\hypertarget{example-of-existing-doi}{}\label{sec:example-of-existing-doi}
 
+%This section describes case studies around the metadata created by three archives. These case studies let us break out specific DataCite metadata recommendations and JSON snippets
 
-See \citep{2023ChNew..34....5D}, \citep{2018EPJWC.18612011R}.
+\subsubsection{Chandra Data Archive}\hypertarget{chandra-data-archive}{}\label{sec:chandra-data-archive}
 
-	
-\subsection{VAMDC \& Zenodo workflow}
-The good and the bad of transitory data citation. See \citep{2018Galax...6..105M}.\\
+The CXC created DOIs for each single Chandra observation \citep{2023ChNew..34....5D}, data entities of the Chandra Source at the single observation and stacked observation level, and publication-based, user-requested Chandra Data Collections. CXC mints DOIs with its own DataCite prefix and different DOI names for each of the classes of DOIs created (see below). For each class of Chandra DOIs, a comprehensive set of Chandra-related DataCite metadata are automatically specified and updated upon specific trigger actions; multiple types of DataCite related identifiers are used to connect DOIs of related data entities in the Chandra archive''.CDA is doing cool things with related identifiers.\newline
+See (D'Abrusco and DPAOps Team, 2023), (Rots and D'Abrusco et al., 2018).
 
-The VAMDC Consortium is a consortium of Institutes and Research Institutions that share a common technical and political framework for the distribution and curation of atomic and molecular data. VAMDC provides a Query Store including data storage for query result with possible DOI generation based on Zenodo\\
+\paragraph{Example :} \url{https://api.datacite.org/dois/10.25574/29770}
 
-Example:\\
-VAMDC query Store record: \url{https://cite.vamdc.eu/references.html?uuid=a819e879-760d-4ede-831a-38d359b5864c}\\
+\subsubsection{VAMDC \& Zenodo workflow}\hypertarget{vamdc--zenodo-workflow}{}\label{sec:vamdc--zenodo-workflow}
+
+The good and the bad of transitory data citation. \newline
+The \href{https://vamdc.org/}{VAMDC} Consortium is a consortium of Institutes and Research Institutions that share a common technical and political framework for the distribution and curation of atomic and molecular data. VAMDC provides a Query Store including data storage for query result with possible DOI generation based on Zenodo \citep{2018Galax...6..105M}.
+
+\paragraph{Example:} VAMDC query Store record: \newline
+\url{https://cite.vamdc.eu/references.html?uuid=a819e879-760d-4ede-831a-38d359b5864c}\\
 Landing page: \url{https://zenodo.org/records/11243136}
 
-\subsection{ESA}
-\textbf{\color{red}  add ESA ?}
+\subsubsection{ESA}\hypertarget{esa}{}\label{esa}
 
-Example:\\
-Landing page: \url{https://doi.org/10.5270/esa-qa4lep3}\\
+add ESA ?
+
+\paragraph{Example:} Landing page: \url{https://doi.org/10.5270/esa-qa4lep3}\\
 (JSON) DOI: \url{https://api.datacite.org/dois/10.5270/esa-qa4lep3}
 
-\subsection{VizieR}
-VizieR produces some awesome DataCite metadata.\\
+\subsubsection{VizieR}\hypertarget{vizier}{}\label{sec:vizier}
 
+VizieR \citep{vizier} produces some awesome DataCite metadata.
 
-The VizieR catalogue service is a CDS service for data published in journals or by space / base-ground agencies. The data are curated by CDS with added-values such as cross-correlations, links and metadata required for the Virtual Observatory. It is a POST publication data flow that generates DOI, landing page, and which disseminate metadata, especially in the Registry of the Virtual Observatory.\\
+The VizieR catalogue service is a CDS service for data published in journals or by space / base-ground agencies. The data are curated by CDS with added-values such as cross-correlations, links and metadata required for the Virtual Observatory. It is a POST publication data flow that generates DOI, landing page, and which disseminate metadata, especially in the Registry of the Virtual Observatory.
 
-
-Example:\\
+\paragraph{Example}:\\
 Landing page: \url{https://cdsarc.cds.unistra.fr/viz-bin/cat/J/AJ/167/89}\\
 IVOA record: \url{https://cds.unistra.fr/registry/?verb=GetRecord&metadataPrefix=ivo_vor&identifier=ivo://cds.vizier/J/AJ/167/89}\\
 (JSON) DOI: \url{https://api.datacite.org/dois/10.26093/cds/vizier.51670089}
 
-\subsection{TODO B.5 MASER  (Baptiste?)}
-	
-\section{Workflows}
-\textbf{\color{red} added by Gilles - TODO: discuss the relevance}
+\subsubsection{PDS}\hypertarget{pds}{}\label{sec:pds}
 
-Figure \ref{fig:diag-dissemination} represents a simplified view of Data dissemination.
-In particular, we see the importance of the IVOA registry harvested by EUDAT\footnote{\url{https://www.eudat.eu/}} and then EOSC\footnote{\url{https://eosc.eu/}} which cross records with DataCite.
+\href{https://pds.nasa.gov/}{The Planetary Data System} (PDS) is a long-term archive of digital data products returned from NASA's planetary missions, and from other kinds of flight and ground-based data acquisitions, including laboratory experiments. But it is more than just a facility - the archive is actively managed by planetary scientists to help ensure its usefulness and usability by the world wide planetary science community.
 
+\paragraph{Examples:}
+\begin{itemize}
+\item  (Dataset in NASA PDS: Small Bodies Node) "Lucy MVIC Dinkinesh Calibrated Data Collection" \url{https://api.datacite.org/dois/10.26007/f61e-0f52}
 
-Figure \ref{fig:doi-schema} proposes relations ships. This diagram had been proposed in a report feedback of the IVOA (A.Schaaff et al.)
+\item (Supplement to article in NASA PDS: Small Bodies Node) "Taxonomy, colors, and slope parameters for asteroids from the Dark Energy Survey Bundle" \url{https://api.datacite.org/dois/10.26033/m95p-bn08}
 
-\begin{figure}[!h]
-\centering
-\includegraphics[width=\textwidth]{diag_dissemination2.eps}
-\caption{Dissemination workflow}
-\label{fig:diag-dissemination}
-\end{figure}
+\end{itemize}
 
-\begin{figure}[!h]
-	\centering
-	\includegraphics[width=\textwidth]{schema-doi.png}
-	\caption{DOI schema}
-	\label{fig:doi-schema}
-\end{figure}
+\subsubsection{NSF-DOE Vera C Rubin Observatory}\hypertarget{nsf-doe-vera-c-rubin-observatory}{}\label{sec:nsf-doe-vera-c-rubin-observatory}
 
-
-\section{Changes from Previous Versions}
-
-No previous versions yet.
-% these would be subsections "Changes from v. WD-..."
-% Use itemize environments.
-
-\clearpage
-\begin{admonition}{Note}
-	All dataset citations in this document were created using BibTeX. The BibTeX for the data/service/collection DOIs is based upon the \texttt{verbatim} metadata supplied by the archive to their choice of DOI registration services as expressed by the doi2bib service\footnote{\url{https://doi2bib.org}}. The doi2bib service was selected because it does the best job protecting unfielded "author" names from complete BibTeX annihilation.
-	Every other reference BibTeX came from NASA ADS\footnote{\url{https://ui.adsabs.harvard.edu/}}.
-\end{admonition}
+Rubin Observatory \citep{10.71929/rubin/2570308} is partially funded by the US Department of Energy and that allows for DOIs to be published through the \href{https://osti.gov/elink}{DOE Office of Scientific and Technical Information (OSTI)}. Rubin has published instrument DOIs for the three instruments and as described in \href{https://doi.org/10.71929/rubin/2583847}{DMTN-318} we publish collections of DOIs for every formal data release. Additionally, a subset of our technical documentation is also published. Each DOI entry is harvested by ADS; a process made easier by the use of a "rubin" infix in each DOI to make them easy to locate in DataCite.
 
 %\bibliography{ivoatex/ivoabib,ivoatex/docrepo,local}
-\bibliography{DOI4Archives}
-	
+\bibliography{ivoatex/ivoabib,ivoatex/docrepo,DOI4Archives}
 \end{document}

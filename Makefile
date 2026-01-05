@@ -8,7 +8,7 @@ DOCNAME = DOI4Archives
 DOCVERSION = 1.0
 
 # Publication date, ISO format; update manually for "releases"
-DOCDATE = 2024-12-29
+DOCDATE = 2025-12-2r6
 
 # What is it you're writing: NOTE, WD, PR, REC, PEN, or EN
 DOCTYPE = NOTE
@@ -23,7 +23,7 @@ SOURCES = $(DOCNAME).tex
 
 # List of image files to be included in submitted package (anything that
 # can be rendered directly by common web browsers)
-FIGURES =
+FIGURES = PIDGraph.png doigraph.png DOIgraphart.png
 
 # List of PDF figures (figures that must be converted to pixel images to
 # work in web browsers).
@@ -31,6 +31,8 @@ VECTORFIGURES =
 
 # Additional files to distribute (e.g., CSS, schema files, examples...)
 AUX_FILES =
+
+IVOA_GROUP= Data Curation and Preservation
 
 -include ivoatex/Makefile
 
