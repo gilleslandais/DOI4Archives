@@ -78,7 +78,7 @@ There are many reasons for creating a DOI. Below, we list the use cases that we 
 
 \item \textbf{Reuse.} The Data consumer expects to get information about origin and rights. For access rights, existing license must be displayed but also readable by software.
 
-\item \textbf{Findability.} Data published are disseminated in networks like the VO registry \citep{std:registry}, google dataset search or the \href{https://open-science-cloud.ec.europa.eu/}{EOSC EU} node. The users as well as the Data Center expect that the entries are consistent.
+\item \textbf{Findability.} Data published are disseminated in networks like the VO Registry \citep{std:registry}, Google dataset search or the \href{https://open-science-cloud.ec.europa.eu/}{EOSC EU} node. The users as well as the Data Center expect that the entries are consistent.
 
 \item \textbf{Impact.} Data centers as well as authors need reports about the usage activity of their work. They query dedicated services (eg: \href{https://opencitations.net/}{OpenCitation}) that are able to make reports and to generate graphs of citation.
 
@@ -123,7 +123,7 @@ We observe different uses for DOIs in astronomy-related archives. Identifiers ar
 Dataset DOIs are the most common usage in astronomy-related repositories, and represent the most important part of all such DOIs. 
 A dataset DOI is used for various resources that can be static, evolving and even multiple.
 
-\paragraph{DataSet for individual Resource}\label{sec:dataset-for-individual-resource}
+\paragraph{Dataset for individual Resource}\label{sec:dataset-for-individual-resource}
 
 Individual resources are being assigned DOIs at various levels of granularity. At the most granular level, every observation in the Chandra Data Archive (\href{https://cxc.harvard.edu/cda/}{CDA}) is assigned an individual DOI. Similarly, the European Space Agency assigned DOIs to every individual Herschel, ISO, Planck and XMM-Newton observation. In a wider granularity, the  European Space Agency (\href{https://www.esa.int/}{ESA}) assigns  a DOI per data release.
 
@@ -135,25 +135,25 @@ A DOI on multiple resources gathers together resources under the same entity. Fo
 
 Evolving dataset is a particular case of Dataset. They include resources such as logs of Observations which are updated incrementally, and they also include resources, such as a knowledge base or "High-Level Science Products" (HLSP) which have non-static data and can grow over time, accumulating both data revisions and additions. %These datasets are not necessarily versioned and can be subject to reproducibility issues.
 
-\paragraph{Resultsets}\label{sec:resultsets}
+\paragraph{Result sets}\label{sec:resultsets}
 
-A Resultset is the result returned by a query. It is the result of a service, a user request and datasets executed at a precise moment, which may be not reproducible if it involves evolving data. Thus, certain services such as the \href{https://vamdc.org/}{VAMDC} or \href{https://www.canfar.net/}{Canfar} provide a Query Store with a DOI (Resultset have not been treated in the scope of this Document).
+A Result set is the result returned by a query. It is the result of a service, a user request and datasets executed at a precise moment, which may be not reproducible if it involves evolving data. Thus, certain services such as the \href{https://vamdc.org/}{VAMDC} or \href{https://www.canfar.net/}{Canfar} provide a Query Store with a DOI (Resultset have not been treated in the scope of this Document).
 
 \subsubsection{Collections}\hypertarget{collections}{}\label{sec:collections}
 
-The DOI collection directs users to a collection of individual data records that are related to each other (e.g. : individual observations from the same survey or archive, etc.). The collection provides access to resources (identified with a DOI or with another identifier) via relation (see  \ref{sec:a-basic-tour-of-relationship-motivating-by-their-usage}) defined in the DataCite schema \citep{https://doi.org/10.14454/mzv1-5b55}
+The collection-type DOI directs users to a collection of individual data records that are related to each other (e.g. : individual observations from the same survey or archive, etc.). The collection provides access to resources (identified with a DOI or with another identifier) via relation (see  \ref{sec:a-basic-tour-of-relationship-motivating-by-their-usage}) defined in the DataCite schema \citep{https://doi.org/10.14454/mzv1-5b55}
 
 Examples of collection-type DOIs include the DOI services provided by the Mikulski Archive for Space Telescopes (MAST) \citep{2018ApJS..236...20N}, Chandra Data Archive (CDA) \citep{2018EPJWC.18612011R}. There is significant variation in the expected use cases for these Collection DOIs. There are also strong variations in the metadata of Collection-type DOIs.
 
-Considering use-cases, both MAST and Chandra Collection DOIs collect dataset identifiers within their respective databases. For instance, Chandra Collection DOI is made of DOIs of different types. Its metadata and related identifiers are defined to make a Chandra collection DOI the most versatile and general aggregation that can be obtained using Chandra data ``entities''.
+Considering use-cases, both MAST and Chandra Collection DOIs collect dataset identifiers within their respective databases. For instance, Chandra Collection is made of DOIs of different types. Its metadata and related identifiers are defined to make a Chandra collection DOI the most versatile and general aggregation that can be obtained using Chandra data ``entities''.
 
 %Similarly the metadata of Collection DOIs vary between MAST and CDA examples. Chandra Data Collection DOIs create complete records of individuals using relatedIdentifier tags and predicates. The metadata of MAST Collection DOIs do not provide detailed information on the individual MAST records collated in the collection.
 
-In any case, \textbf{Collection for DOI means a collection of resources accessible via sustainable URIs.}
+In any case, \textbf{Collection-type DOI means a collection of resources accessible via sustainable URIs.}
 
 \subsubsection{Service}\hypertarget{service}{}\label{sec:service}
 
-A service in DOI  designates both a set of services accessible via the web and the whole organizational system, including staff, necessary for its operation.
+A service DOI  designates both a set of services accessible via the web and the whole organizational system, including staff, necessary for its operation.
 
 An example of Service DOI is the VizieR Catalogue service including many access to a database \footnote{\url{https://api.datacite.org/dois/application/vnd.datacite.datacite+xml/10.26093/cds/vizier}} or the Tubingen Oscillator Strengths Service (TOSS) in GAVO \footnote{\url{https://api.datacite.org/dois/application/vnd.datacite.datacite+xml/10.21938/3I01ISNUCODNH1ZJBCVUWA}}
 
@@ -161,7 +161,7 @@ An example of Service DOI is the VizieR Catalogue service including many access 
 
 A knowledgebase is a collection of material collated from many discrete sources. All of the values contained in a knowledge base have a provenance traced to other resources and have been curated into a single database for reuse. Examples include: \href{https://simbad.cds.unistra.fr/}{Simbad} \citep{2000A&AS..143....9W}, NASA Exoplanet Archive \citep{2013PASP..125..989A} (\href{https://exoplanetarchive.ipac.caltech.edu/}{NEA}), NASA Extragalactic Database (\href{https://ned.ipac.caltech.edu/}{NED}) \citep{1991ASSL..171...89H}.
 
-Knowledgebase is not a particular entity in the DOIs schemas ; it can be a dataset or a service depending on what has to be described (see \hyperlink{assigning-resource-type}{Assigning resource type}).
+A knowledgebase is not a particular entity in the DOIs schemas ; it can be a dataset or a service depending on what has to be described (see \hyperlink{assigning-resource-type}{Assigning resource type}).
 
 \section{DOI Lifecycle}\hypertarget{doi-lifecycle}{}\label{sec:doi-lifecycle}
 
@@ -271,7 +271,7 @@ In actual practice, of course, there are many roads leading to Rome. The followi
 
 This can range from an entirely manual activity to an entirely automated one. The manual effort to gather metadata can be significant, especially for heterogeneous repositories.
 
-RA, such as DataCite or CrossRef, fixed Metadata schema, formats, and DOI submission modalities. The RA generally provides a form-based interface and APIs covering the registering protocols and metadata formats (such as JSON or XML).Metadata schema, formats, and DOI submission modalities are fixed by the RA. The RA generally provides a form-based interface and APIs covering the registering protocols and metadata formats (such as JSON or XML)
+RAs, such as DataCite or Crossref, provides Metadata schema, formats, and DOI submission modalities. The RA generally provides a form-based interface and APIs covering the registering protocols and metadata formats (such as JSON or XML).Metadata schema, formats, and DOI submission modalities are fixed by the RA. The RA generally provides a form-based interface and APIs covering the registering protocols and metadata formats (such as JSON or XML)
 
 For DOI creators minting small numbers of DOIs (a few dozen per year, say), the RA may provide a form-based interface for creating DOIs that guides the user through the most commonly used metadata attributes. DataCite, for example, has its \href{https://doi.datacite.org/}{Fabrica} interface for interactive DOI creation. (It can also be used to edit existing DOI metadata, one record at a time.)
 
@@ -498,7 +498,7 @@ The choice of the "ResourceType" (see also definition in \hyperlink{resources-tr
 %The choice of ResourceType depends on what has to be described. 
 For instance if you want to publish a DOI for your Knowledge base, you can expose its content (so the database) with the type \dataciteterm{ResourceTypeGeneral} "Dataset", or the Service or organization that maintains it with the type \dataciteterm{ResourceTypeGeneralType} "Service".\newline
 
-\textbf{A DataSet should not be confused with a Collection.} A collection is an entity which doesn't point to the data directly, but gathers resources described elsewhere having each their own PID. The collection provides a list of relations to resources and has metadata that applies to all of these external resources. The Dataset contains one or multiple resources under the same DOI. For instance, an author who publishes a set of Documents made of spectrums under the same DOI is a \dataciteterm{ResourceTypeGeneral} "DataSet".
+\textbf{A Dataset should not be confused with a Collection.} A collection is an entity which doesn't point to the data directly, but gathers resources described elsewhere having each their own PID. The collection provides a list of relations to resources and has metadata that applies to all of these external resources. The Dataset contains one or multiple resources under the same DOI. For instance, an author who publishes a set of Documents made of spectrums under the same DOI is a \dataciteterm{ResourceTypeGeneral} "Dataset".
 
 "ResourceType" is a description of everything that is associated with the DOI, taken as a whole. DataCite provides the term "formats" to describe the files comprising the resource. The term can list multiple specific MIME types for users who want to know whether they will be able to do anything with what they download.
 
@@ -512,10 +512,10 @@ Table or set of tables & Dataset & observation datasets compilation evolved data
 Resource such as a table available in VO & Dataset & IVOA resource ObsCore table EpnCore table\\\hline
 Individual image & Image & Image 2D, Image 3D Sky survey\\ \hline
 Collection of images & Dataset & Images, curated images, ...\\ \hline
-Collection of Spectra & DataSet & Spectra\\ \hline
+Collection of Spectra & Dataset & Spectra\\ \hline
 Logs of observation & Dataset & Evolving Datasets\\ \hline
 Collection of resources having their own PID & Collection & (specify the resource type) Collection of images Collection of observations ...\\ \hline
-Set/collection of resources & DataSet & \\ \hline
+Set/collection of resources & Dataset & \\ \hline
 VO service & Service & IVOA service IVOA TAP service\\ \hline
 Service Web & Service & Web service\\ \hline
 Incremental dataset (HLSP) & Dataset & Evolving Dataset\\ \hline
@@ -578,7 +578,7 @@ Dataset Title : VizieR, \url{https://doi.org/10.26093/cds/vizier.17860120}\newli
 "Spectropolarimetric survey of classical Be stars"
 
 \paragraph{How to feed titles ?}
-We give a non exhaustive list of thought to be considered to create a useful title:
+We give a non exhaustive list of suggestions to be considered to create a useful title:
 
 \begin{itemize}
 \item{} Object or type studied
@@ -769,7 +769,7 @@ To make a license interoperable means to be machine readable. It is advisable to
 ]
 \end{lstlisting}
 
-\subsubsection{Fundings}\hypertarget{fundings}{}\label{fundings}
+\subsubsection{Funding}\hypertarget{fundings}{}\label{fundings}
 
 Financial support can be attached to a DOI using \dataciteterm{fundingReference} . Funds information is expressed with a reference to the organism, generally with an organism identifier (eg.: ISNI, Grid, Cross Funder, ROR) and an award reference (see DataCite guidance)\\
 
@@ -807,7 +807,7 @@ Some agencies make statistics on citation extracted from articles which include 
 
 Note: Publishers that provide DOI for resources deriving from other products should consider how to cite the original data. Citing is possible in the DataCite schema that provides relationships to cite resources (see linked data in section \ref{sec:a-basic-tour-of-relationship-motivating-by-their-usage}). %Datasets derived from other products should be listed in the DOI metadata. For this, we use the relations \datacitetag{relatedidentifier}{relatedIdentifier} using the term "Cites". This good practice should be used to link any references or original data when they have been published (see linked data section \ref{sec:a-basic-tour-of-relationship-motivating-by-their-usage})
 
-\subsubsection{Curate DOI is mandatory to extract citation}\hypertarget{curate-doi-is-mandatory-to-extract-citation}{}\label{sec:curate-doi-is-mandatory-to-extract-citation}
+\subsubsection{A curated DOI is mandatory for extracting a citation}\hypertarget{curate-doi-is-mandatory-to-extract-citation}{}\label{sec:curate-doi-is-mandatory-to-extract-citation}
 
 The citation that can be extracted from a DOI is only useful if the DOI's metadata is properly curated with the quality fixed by journals, ADS or Data publishers.
 
@@ -865,7 +865,7 @@ Koen, C., & Wilhelm, R. (2006). A-G star metallicity [Data set].
 Centre de Donnees Strasbourg (CDS). https://doi.org/10.26093/CDS/VIZIER.73200451
 \end{lstlisting}
 
-\subsubsection{Using DOI for Evolving DataSet}\hypertarget{using-doi-for-evolving-dataset}{}\label{using-doi-for-evolving-dataset}
+\subsubsection{Using DOI for Evolving Dataset}\hypertarget{using-doi-for-evolving-dataset}{}\label{using-doi-for-evolving-dataset}
 
 There are different approaches for \hyperlink{evolving-datasets}{evolving Datasets} citation which depends on the Data Center implementation.
 
@@ -883,7 +883,7 @@ In this approach, the Data Center makes snapshots and adopts a DOI \hyperlink{ve
 
 %In the example date\_of\_access could be the 'update' date of the DOI record (assuming that the dataset and its DOI are well synchronized).
 
-\item Cite a DataSet extraction resulting from a query. \newline
+\item Cite a Dataset extraction resulting from a query. \newline
 The solution may become complex if we take or not the reproducibility aspect. A simple solution without reproducibility constraint consists, in an article, to cite the evolving Dataset and to specify the query outside the citation, somewhere in the text.\newline
 An option taking into account the reproducibility has been adopted by the VAMDC Query Store where query and result are hosted with a DOI (giving details are not in the scope of this note).
 
@@ -1234,7 +1234,7 @@ See (D'Abrusco and DPAOps Team, 2023), (Rots and D'Abrusco et al., 2018).
 
 \subsubsection{VAMDC \& Zenodo workflow}\hypertarget{vamdc--zenodo-workflow}{}\label{sec:vamdc--zenodo-workflow}
 
-The good and the bad of transitory data citation. \newline
+%The good and the bad of transitory data citation. \newline
 The \href{https://vamdc.org/}{VAMDC} Consortium is a consortium of Institutes and Research Institutions that share a common technical and political framework for the distribution and curation of atomic and molecular data. VAMDC provides a Query Store including data storage for query result with possible DOI generation based on Zenodo \citep{2018Galax...6..105M}.
 
 \paragraph{Example:} VAMDC query Store record: \newline
