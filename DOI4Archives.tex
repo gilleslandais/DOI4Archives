@@ -183,7 +183,7 @@ The RAs are the key members of the \href{https://www.doi.org/}{DOI Foundation} -
 \href{https://identify.bsigroup.com/}{bsi.identify}, for example, deals specifically with DOIs used to track construction products; \href{https://www.eidr.org/}{EIDR} provides DOI services for entertainment media; Japan, China, and Korea all have RAs providing DOI services for their agencies and citizens, etc. There are currently 12 RAs in the DOI Foundation. \href{https://datacite.org/}{DataCite} is one of these RAs, and was the first RA specializing in providing DOIs for data resources. The RAs together ensure that if one RA ceases operation, the DOIs that that RA managed will then be managed by one or more other RAs in the Foundation.
 
 \item{} \textbf{Users - DOI Creators}\newline
-RAs provide (or more often sell) DOI services to \emph{users} - people who want to create DOIs for various reasons. Each RA will organize its users according to its own business model. DataCite does this through memberships and service fees. DataCite has two types of members: Consortia, in which one organization acts as a DOI agent for many smaller organizations (managing billing and often providing software for the DOI pipeline); and Direct Members, who are typically single organizations managing their own DOI billing/pipelines.
+RAs provide (or more often sell) DOI services to \emph{users} - people or organization who want to create DOIs for various reasons. Each RA will organize its users according to its own business model. DataCite does this through memberships and service fees. DataCite has two types of members: Consortia, in which one organization acts as a DOI agent for many smaller organizations (managing billing and often providing software for the DOI pipeline); and Direct Members, who are typically single organizations managing their own DOI billing/pipelines.
 
 \item{} \textbf{Users - DOI Consumers}\newline
 The RAs make the DOIs and their associated data available to the public. Typically the basic metadata is freely available for public reference and use. DataCite, for example, makes all metadata in their database accessible to the world at no charge.
@@ -210,7 +210,7 @@ Because a DOI is itself a permanent entity that is generally expected to lead to
 
 \subsubsection{DOIs are \emph{forever.}}\hypertarget{dois-are-forever}{}\label{sec:dois-are-forever}
 
-Once a DOI is published it must always be resolvable. If a resource with a DOI is removed from circulation (a data set is offlined, for example, or a digital document is accidentally destroyed) then the DOI must resolve to a tombstone page. A tombstone page (\hyperlink{tombstones}{Tombstones})indicates clearly that the resource is no longer available, and usually offers contact information or an option for users who are attempting to lay hands on the now-defunct resource. The tombstone page must remain as a legacy for as long as there is a DOI Foundation to resolve it.
+Once a DOI is published it must always be resolvable. If a resource with a DOI is removed from circulation (a data set is offlined, for example, or a digital document is accidentally destroyed) then the DOI must resolve to a tombstone page. A tombstone page (see \hyperlink{tombstones}{Tombstones} section) indicates clearly that the resource is no longer available, and usually offers contact information or an option for users who are attempting to access on the now-defunct resource. The tombstone page must remain as a legacy for as long as there is a DOI Foundation to resolve it.
 
 \subsubsection{DOIs are not free.}\hypertarget{dois-are-not-free}{}\label{sec:dois-are-not-free}
 
@@ -451,7 +451,7 @@ Resources will usually dictate what can be curated after publication. The only t
 
 RAs are also concerned about metadata completeness. Incomplete metadata leads to bad search results from the RA metadata databases. This also reflects badly on the RAs, and there is increasing pressure to "do something about it". In general, all applicable fields of the RA metadata schema should be filled wherever possible.
 
-Once these baselines are met, there are other curational chores to perform as resources allow. Some organizations, for example, actively track citations of their products and add the information to their own DOI metadata. Also, many archives are now thinking seriously about "metadata enrichment" - adding metadata to both standardize and improve the quality and success of searching, accessing, and (re)using their data holdings.
+Once these baselines are met, there are other curational chores to perform as resources allow. Some organizations, for example, actively track citations of their products and add the information to their own DOI metadata  (see section \hyperlink{term_to_link_resources_with_their_origin}{Term to link resources with their origin}). Also, many archives are now thinking seriously about "metadata enrichment" - adding metadata to both standardize and improve the quality and success of searching, accessing, and (re)using their data holdings.
 
 %Note that, with respect to metadata updates, the versioning of the metadata itself is typically a detail handled within the RA's database. Explicit version numbers in the metadata schemas usually refer either to the version of the schema in use, or the version of the resource being described.
 
@@ -583,7 +583,7 @@ Reference article: ApJ (Draper Z.H, 2000),
 Dataset Title : VizieR, \url{https://doi.org/10.26093/cds/vizier.17860120}\newline
 "Spectropolarimetric survey of classical Be stars"
 
-\paragraph{How to feed titles ?}
+\paragraph{How to pick titles ?}
 We give a non exhaustive list of suggestions to be considered to create a useful title:
 
 \begin{itemize}
@@ -660,7 +660,12 @@ DataCite makes a difference between creator and contributor.
 \item{} The contributor list is optional. Contributors complete creators with any person (or organization) who took a part in the resource creation. The contributor is qualified with a controlled vocabulary  in the DataCite schema (eg: \dataciteterm{contributorType} "ContactPerson", "ProjectLeader", "Sponsor", etc.). Contributors are generally not in citations (such as those generated by ADS or DataCite)
 \end{itemize}
 
-``Creator'' is the Dublin Core generalization of the ``author'' concept, it is a fundamental metadata which allows to credit the authors. The creator list is used by citation generators who extract information from DOI (see \hyperlink{citation-extraction}{Citation extraction}). The good usage consists of adding all authors (and not only the first author) and to provide ORCID and affiliations each time they are known.\newline
+%``Creator'' is the Dublin Core generalization of the ``author'' concept, it is a fundamental metadata which allows to credit the authors. The creator list is used by citation generators who extract information from DOI (see \hyperlink{citation-extraction}{Citation extraction}). The good usage consists of adding all authors (and not only the first author) and to provide ORCID and affiliations each time they are known.\newline
+The "Creator"  is a fundamental metadata which allows to credit persons or organizations.The creator list is used by citation generators who extract information from DOI (see \hyperlink{citation-extraction}{Citation extraction}).
+
+In the case of article or data product associated to an article, the creators are generally the list of authors.  The good usage consists of adding all authors (and not only the first author) and to provide ORCID and affiliations each time they are known.
+
+For Observations, possibly subject to complex processes, the creators are persons (eg: PI) or the organization responsible of the observation.
 Sometimes, maintaining a creator list becomes difficult and specifying a full organization is privileged. It is particularly important when a lot of resources are generated by an institute. For instance Chandra pipeline specifies the full organization for their DOI observations.
 
 \paragraph{Example:} \url{https://api.datacite.org/dois?query=10.25574/29770}\newline
@@ -694,7 +699,7 @@ Making the difference between creator/contributor has been debated (see url in t
 To help the choice, we propose 2 criteria:
 
 \begin{enumerate}
-\item{} The creator takes a substantial part in  the data creation (imagine, observe, calibrate, analyse, etc.)
+\item{} The creator takes a substantial part in  the data creation (imagine, design the Observation, calibrate, analyse, etc.)
 \item{} The creator approves the decision to publish the final result
 \end{enumerate}
 
@@ -981,10 +986,11 @@ The identifier type must be specified from a controlled vocabulary using the ter
 Choosing the identifier is important and depends on their usage in the Open Data landscape. 
 For instance, the bibcode which is available in Datacite schema but not in OpenAire \footnote{\url{https://guidelines.openaire.eu/en/latest/data/field_identifier.html}} have a limited use for each service that uses the OpenAire process.
 
+\important{To facilitate the usage, the DOI has to be privileged than any other identifier or URI.}
 
-\important{To facilitate the harvesting/merging jobs, the DOI has to be privileged than any other identifier or URI.}
 
 \subsubsection{Term to link resources with their origin}
+\hypertarget{term_to_link_resources_with_their_origin}{}\label{sec:term_to_link_resources_with_their_origin}
 It is commonly used to link a dataset with an article or with its original dataset. These references (in bold) are currently exploited by EOSC.
 
 \begin{itemize}
@@ -1233,7 +1239,7 @@ The FAIRness of the landing page can be evaluated with validators:
 
 \subsubsection{Chandra Data Archive}\hypertarget{chandra-data-archive}{}\label{sec:chandra-data-archive}
 
-The CXC created DOIs for each single Chandra observation \citep{2023ChNew..34....5D}, data entities of the Chandra Source at the single observation and stacked observation level, and publication-based, user-requested Chandra Data Collections. CXC mints DOIs with its own DataCite prefix and different DOI names for each of the classes of DOIs created (see below). For each class of Chandra DOIs, a comprehensive set of Chandra-related DataCite metadata are automatically specified and updated upon specific trigger actions; multiple types of DataCite related identifiers are used to connect DOIs of related data entities in the Chandra archive''.CDA is doing cool things with related identifiers.\newline
+The CXC created DOIs for each single Chandra observation \citep{2023ChNew..34....5D}, data entities of the Chandra Source at the single observation and stacked observation level, and publication-based, user-requested Chandra Data Collections. CXC mints DOIs with its own DataCite prefix and different DOI names for each of the classes of DOIs created (see below). For each class of Chandra DOIs, a comprehensive set of Chandra-related DataCite metadata are automatically specified and updated upon specific trigger actions; multiple types of DataCite related identifiers are used to connect DOIs of related data entities in the Chandra archive''.\newline %CDA is doing cool things with related identifiers.
 See (D'Abrusco and DPAOps Team, 2023), (Rots and D'Abrusco et al., 2018).
 
 \paragraph{Example :} \url{https://api.datacite.org/dois/10.25574/29770}
@@ -1249,10 +1255,14 @@ Landing page: \url{https://zenodo.org/records/11243136}
 
 \subsubsection{ESA}\hypertarget{esa}{}\label{esa}
 
-add ESA ?
+The ESAC Science Data Centre (ESDC) is the European Space Agency’s main hub for archiving, preserving, and providing access to space‑science data. It is located at the European Space Astronomy Centre (ESAC) near Madrid, Spain, and supports virtually all ESA missions in astronomy, planetary science, and heliophysics. ESA is providing DOIs for all the datasets from its space science missions and they can all be accessible at \url{https://www.cosmos.esa.int/web/esdc/doi}.
 
-\paragraph{Example:} Landing page: \url{https://doi.org/10.5270/esa-qa4lep3}\\
-(JSON) DOI: \url{https://api.datacite.org/dois/10.5270/esa-qa4lep3}
+
+
+\paragraph{Links for examples of landing page and DOI}:\\
+Gaia DR3 DOI landing page: \url{https://esdcdoi.esac.esa.int/doi/html/data/astronomy/gaia/DR3.html} \\
+DOI for the fourth XMM-Newton serendipitous source catalogue: \url{https://doi.org/10.57780/esa-y9l9jwg} 
+
 
 \subsubsection{VizieR}\hypertarget{vizier}{}\label{sec:vizier}
 
