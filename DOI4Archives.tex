@@ -7,8 +7,8 @@
 
 \newcommand{\datacitedocurl}{https://datacite-metadata-schema.readthedocs.io/en/4.6}
 \newcommand{\datacitepropurl}[1]{\datacitedocurl/properties/#1}
-\newcommand{\dataciteterm}[1]{\textcolor{blue}{DataCite:\textbf{#1}}}
-\newcommand{\datacitetag}[2]{\href{\datacitepropurl{#1}}{\textcolor{blue}{DataCite:\textbf{#2}}}}
+\newcommand{\dataciteterm}[1]{\textcolor{blue}{\mbox{datacite:\textbf{#1}}}}
+\newcommand{\datacitetag}[2]{\href{\datacitepropurl{#1}}{\textcolor{blue}{\mbox{datacite:\textbf{#2}}}}}
 
 %\href{https://datacite-metadata-schema.readthedocs.io/en/4.6/properties/date/#a-datetype}{DataCite:updated}
 \newcommand{\important}[1]{
@@ -23,12 +23,12 @@
 % interest groups.
 \ivoagroup[IG]{Data Curation and Preservation}
 
-\author[https://orcid.org/0000-0003-0666-6367]{August Muench}
 \author[https://orcid.org/0000-0003-4868-5873]{Gilles Landais}
-\author[https://orcid.org/0000-0003-3073-0605]{Raffaele D'Abrusco}
 \author[https://orcid.org/0000-0002-8300-9443]{Anne Catherine Raugh}
-\author[https://orcid.org/0000-0003-4264-2450]{Edwin Henneken}
+\author[https://orcid.org/0000-0003-0666-6367]{August Muench}
 \author[https://orcid.org/0000-0001-7915-5571]{Baptiste Cecconi}
+\author[https://orcid.org/0000-0003-3073-0605]{Raffaele D'Abrusco}
+\author[https://orcid.org/0000-0003-4264-2450]{Edwin Henneken}
 \author[https://orcid.org/0000-0001-5982-167X]{Tim Jenness}
 
 \editor{G. Landais}
@@ -62,7 +62,7 @@ The DOI is widely used in the academic publishing process for articles, datasets
 The DOI is particularly well suited to citation. From its metadata, it is possible to extract the information needed to generate BibTeX. In addition, the DOI has a resolver that translates a DOI into a URL. The mechanism is supported by an architecture that allows to modify the URL over time. This feature makes the DOI easy to use for citing or linking resources in articles or from any web pages.
 %In addition, the DOI has a URL resolver that allows using the resource to be linked from an article or any web page.
 
-The architecture is robust and has been generalized to identify other types of data than those mentioned above. For example, DOIs are used for instruments (\href{https://rubinobservatory.org/}{Rubin Telescope}), and the \href{https://datacite.org/}{DataCite} organization which provides DOI for datasets, is a partner of \href{https://ardc.edu.au/}{ARDC} to register identifiers for projects (\href{https://support.datacite.org/docs/raids}{RAID}).
+The architecture is robust and has been generalized to identify other types of data than those mentioned above. For example, DOIs are used for instruments (\href{https://rubinobservatory.org/}{Rubin Observatory}), and the \href{https://datacite.org/}{DataCite} organization which provides DOI for datasets, is a partner of \href{https://ardc.edu.au/}{ARDC} to register identifiers for projects (\href{https://support.datacite.org/docs/raids}{RAID}).
 
 With the advent of open science, DOI has taken on a key role in the dissemination of information. It enforced the data traceability by linking resources of different types according to relationships of dependency or authorship and includes other identification standards such as the author identification (\href{https://orcid.org/}{ORCID}), organizations (\href{https://ror.org/}{ROR}) or Funders.
 
@@ -279,11 +279,11 @@ This can range from an entirely manual activity to an entirely automated one. Th
 
 RAs, such as DataCite or Crossref, provides Metadata schema, formats, and DOI submission modalities. The RA generally provides a form-based interface and APIs covering the registering protocols and metadata formats (such as JSON or XML).Metadata schema, formats, and DOI submission modalities are fixed by the RA. The RA generally provides a form-based interface and APIs covering the registering protocols and metadata formats (such as JSON or XML)
 
-For DOI creators minting small numbers of DOIs (a few dozen per year, say), the RA may provide a form-based interface for creating DOIs that guides the user through the most commonly used metadata attributes. DataCite, for example, has its \href{https://doi.datacite.org/}{Fabrica} interface for interactive DOI creation. (It can also be used to edit existing DOI metadata, one record at a time.)
+For DOI creators minting small numbers of DOIs (a few dozen per year, say), the RA may provide a form-based interface for creating DOIs that guides the user through the most commonly used metadata attributes. \mbox{DataCite}, for example, has its \href{https://doi.datacite.org/}{Fabrica} interface for interactive DOI creation. (It can also be used to edit existing DOI metadata, one record at a time.)
 
 Some RAs also provide APIs for creating, drafting,  publishing, and updating DOI metadata. DOI creators can code their own custom DOI minting interfaces using these APIs. Note that these APIs will require credentials to make any change to the metadata in the RA database, which may not be available if DOI service is being provided by an intermediary organization.
 
-Sometimes, RA provides a test and production environment. In DataCite, the ``\href{https://doi.test.datacite.org/}{test Fabrica}'' is a production clone that emulates the DOI generation. It is common for DataCenter who develops a DOI workflow.
+Sometimes, RA provides a test and production environment. In \mbox{DataCite}, the ``\href{https://doi.test.datacite.org/}{test Fabrica}'' is a production clone that emulates the DOI generation. It is common for DataCenter who develops a DOI workflow.
 
 \subsubsection{Step 2: Create a landing page}\hypertarget{step-2-create-a-landing-page}{}\label{sec:step-2-create-a-landing-page}
 
@@ -900,21 +900,21 @@ An option taking into account the reproducibility has been adopted by the VAMDC 
 
 \end{itemize}
 
-\subsubsection{Citing Collections}\hypertarget{citing-collections}{}\label{citing-collections}
+%\subsubsection{Citing Collections}\hypertarget{citing-collections}{}\label{citing-collections}
 
-Practice shows that the quality required to extract a good citation is often not obtained from the DOI of Collections. This lack of information is often due to the concept which is of a different nature.
+%Practice shows that the quality required to extract a good citation is often not obtained from the DOI of Collections. This lack of information is often due to the concept which is of a different nature.
 
-The usage of Collections can be ambiguous for article editions. We report two usages, without wanting to endorse either.
+%The usage of Collections can be ambiguous for article editions. We report two usages, without wanting to endorse either.
 
-\begin{itemize}
-\item{} Collection is not intended to be cited in articles.\newline
-The role of Collection (potentially having poor metadata) seems to be essentially to establish relation (with the advantage of the flexibility of the URL resolution that the DOI offers).\newline
-This approach is chosen by MAST
-\item{} The preferred citation is the Collection.\newline
-Collections are intended to collect and distribute credit to \& collection of entities they contain.\newline
-Sometimes, individual entities have poor metadata in favor of global metadata (in Collections). In this architecture, because heritage is not trivial for harvesting, it results that individual resources have no metadata allowing citation.\\
+%\begin{itemize}
+%\item{} Collection is not intended to be cited in articles.\newline
+%The role of Collection (potentially having poor metadata) seems to be essentially to establish relation (with the advantage of the flexibility of the URL resolution that the DOI offers).\newline
+%This approach is chosen by MAST
+%\item{} The preferred citation is the Collection.\newline
+%Collections are intended to collect and distribute credit to \& collection of entities they contain.\newline
+%Sometimes, individual entities have poor metadata in favor of global metadata (in Collections). In this architecture, because heritage is not trivial for harvesting, it results that individual resources have no metadata allowing citation.\\
 %This approach is chosen by Chandra
-\end{itemize}
+%\end{itemize}
 
 \section{DOIs across networks}\hypertarget{dois-across-networks}{}\label{dois-across-networks}
 
@@ -983,8 +983,7 @@ The predicate is a term taken into a controlled \href{\datacitepropurl/relatedid
 The identifiers must be unique and, preferably persistent (PID) and resolvable. 
 The identifier type must be specified from a controlled vocabulary using the term \href{\datacitepropurl/relatedidentifier/#a-relatedidentifiertype}{\dataciteterm{relatedIdentifierType}}. The list includes common identifiers (eg: DOI, bibcode, ISSN), URL or resolvable identifier such as PURL or W3id\footnote{\url{https://guidelines.openaire.eu/en/latest/data/field_identifier.html}}.
 
-Choosing the identifier is important and depends on their usage in the Open Data landscape. 
-For instance, the bibcode which is available in Datacite schema but not in OpenAire \footnote{\url{https://guidelines.openaire.eu/en/latest/data/field_identifier.html}} have a limited use for each service that uses the OpenAire process.
+The choice of identifier affects its reusability. For instance, the bibcode which is available in Datacite schema but is not recognized in OpenAire \footnote{\url{https://guidelines.openaire.eu/en/latest/data/field_identifier.html}} has a limited use in each service depending of OpenAire.
 
 \important{To facilitate the usage, the DOI has to be privileged than any other identifier or URI.}
 
@@ -1003,7 +1002,7 @@ Is the "Cites" reciprocal term that could be used, for instance; when the datase
 \item{} \textbf{IsSupplementTo}\newline
 if the dataset is supplementary (e.g., it contains the data used to create a plot or table accompanying the article), use a relationType of "IsSupplementTo"
 \item{} \textbf{IsDerivedFrom}\newline
-If your data were derived from a previous dataset, include the DOI of that data set with a referenceType of "IsDerivedFrom". IsDerivedFrom has to be used for any data that has been made from an original resource. DataCite accepts the case that a dataset is derived from a larger dataset or dataset with values that have been manipulated from their original state.
+If your data were derived from a previous dataset, include the DOI of that data set with a referenceType of "IsDerivedFrom". \mbox{IsDerivedFrom} has to be used for any data that has been made from an original resource. DataCite accepts the case that a dataset is derived from a larger dataset or dataset with values that have been manipulated from their original state.
 \item{} \textbf{IsVariantFormOf}\newline
 If your data is a copy of an original Dataset, the term is adapted for you. In a more general case, the term includes a dataset in which the original content has not been modified. It includes a dataset with added values or with any "decoration" that does not modify the scientific content.
 \item{} \textbf{IsCollectedBy}\newline
@@ -1027,7 +1026,8 @@ Frequently, even copies are variants, \textbf{so privilege other terms such as i
 
 \begin{lstlisting}
 <relatedIdentifiers>
-  relatedIdentifier relatedIdentifierType="bibcode" relationType="IsSupplementTo">
+  <relatedIdentifier relatedIdentifierType="bibcode" 
+                     relationType="IsSupplementTo">
    	2023ApJS..264.8H
   </relatedIdentifier>
 </relatedIdentifiers>
@@ -1037,7 +1037,8 @@ Frequently, even copies are variants, \textbf{so privilege other terms such as i
 (extract from \url{https://doi.org/10.26093/cds/vizier.1355}).
 \begin{lstlisting}
 <relatedIdentifiers>
-  <relatedIdentifier relatedIdentifierType="DOI" relationType="IsVariantFormOf">
+  <relatedIdentifier relatedIdentifierType="DOI" 
+                     relationType="IsVariantFormOf">
     10.5270/esa-qa4lep3
   </relatedIdentifier>
 </relatedIdentifiers>
@@ -1149,7 +1150,7 @@ SciX works with Editors, Publishers and Organizations to harvest resources. DOIs
 
 \begin{itemize}
 \item{} Bad metadata occurs when the metadata supplied does not follow the metadata model.\newline
-It includes both, misunderstanding of the schema (for instance incorrect resourceType that happens in particular with Collections) and uncurated data (for instance when the information does not match the schema definition. Eg: eg: \textless{}creator\textgreater{}Henneken et al. (2024)\textless{}/creator\textgreater{}).
+It includes both, misunderstanding of the schema (for instance incorrect resourceType that happens in particular with Collections) and uncurated data (for instance when the information does not match the schema definition. eg: \textless{}creator\textgreater{}Henneken et al. (2024)\textless{}/creator\textgreater{}).
 
 \item{} Incomplete metadata means  less useful records (or meaningless records in the worst case). The \href{https://scixplorer.org/scixblog/data-linking-I}{SciX blog} on data indexed in SciX (to capture citations) specifies a minimal set of metadata desired for indexing data
 
@@ -1239,7 +1240,7 @@ The FAIRness of the landing page can be evaluated with validators:
 
 \subsubsection{Chandra Data Archive}\hypertarget{chandra-data-archive}{}\label{sec:chandra-data-archive}
 
-The CXC created DOIs for each single Chandra observation \citep{2023ChNew..34....5D}, data entities of the Chandra Source at the single observation and stacked observation level, and publication-based, user-requested Chandra Data Collections. CXC mints DOIs with its own DataCite prefix and different DOI names for each of the classes of DOIs created (see below). For each class of Chandra DOIs, a comprehensive set of Chandra-related DataCite metadata are automatically specified and updated upon specific trigger actions; multiple types of DataCite related identifiers are used to connect DOIs of related data entities in the Chandra archive''.\newline %CDA is doing cool things with related identifiers.
+The CXC created DOIs for each single Chandra observation \citep{2023ChNew..34....5D}, data entities of the Chandra Source at the single observation and stacked observation level, and publication-based, user-requested Chandra Data Collections. CXC mints DOIs with its own \mbox{DataCite} prefix and different DOI names for each of the classes of DOIs created (see below). For each class of Chandra DOIs, a comprehensive set of Chandra-related DataCite metadata are automatically specified and updated upon specific trigger actions; multiple types of DataCite related identifiers are used to connect DOIs of related data entities in the Chandra archive''.\newline %CDA is doing cool things with related identifiers.
 See (D'Abrusco and DPAOps Team, 2023), (Rots and D'Abrusco et al., 2018).
 
 \paragraph{Example :} \url{https://api.datacite.org/dois/10.25574/29770}
